@@ -1,0 +1,3 @@
+var str := "hello"
+var isStr := str is string
+print isStr // should output true

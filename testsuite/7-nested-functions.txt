@@ -1,0 +1,7 @@
+var outer := func(a) is
+    var inner := func(b) => a + b
+    return inner
+end
+
+var myFunc := outer(5)
+print myFunc(3) // should output 8

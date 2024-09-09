@@ -1,0 +1,3 @@
+var square := func(x) => x * x
+var result := square(4)
+print result // should output 16

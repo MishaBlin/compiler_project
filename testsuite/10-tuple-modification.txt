@@ -1,0 +1,3 @@
+var t := {a := 1, b := 2}
+t := t + {c := 3}
+print t.c // should output 3

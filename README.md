@@ -3,6 +3,6 @@
 Inside the working directory run:
 ```
 $ docker build -t compiler .
-$ docker run -it -v $(pwd):/app my-lexer-app
-$ ./run.sh <test_file_name>
+$ docker run -it -v $(pwd):/app compiler
+$ bash run.sh ./tests/<test_file_name>
 ```

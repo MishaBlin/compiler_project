@@ -15,6 +15,7 @@ integer    {digit}+
 real       {integer}("."{integer})?("E"("+"|"-")?{integer})?
 
 %%
+\".*\"           { lexeme = yytext; return STRING_LITERAL; }
 "+"              { return PLUS; }
 "-"              { return MINUS; }
 "*"              { return MULT; }

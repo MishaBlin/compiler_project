@@ -1,29 +1,6 @@
-var t := {a := 1, b := 2}
-t := t + {c := 3}
-print t.c // should output 3
-
-var arr := [1, 2, 3, 4]
-arr[2] := 10
-print arr[2] // should output 10
-
-var str := "hello"
-var isStr := str is string
-print isStr // should output true
-
-var x := 42
-
-x := 3.14
-print x                  // Should output: 3.14
-
-x := "hello"
-print x                  // Should output: hello
-
-x := true
-print x                  // Should output: true
-
-x := func(a) => a + 1
-print x(10)              // Should output: 11
-
-x := [1, 2, 3]
-x[2] := 10
-print x                  // Should output: [1, 2, 10]
+var x := 10
+if true then
+  var x := 20
+  print x // should output 20
+end
+print x // should output 10

@@ -41,7 +41,12 @@ DeclarationsAndStatements : Declarations
                           | Statements Declarations
                           ;
 
-Declaration : VAR IDENTIFIER OptAssignment OptSemicolon ;
+Declarations : Declaration
+             | Declarations Declaration
+             ;
+
+Declaration : VAR IDENTIFIER OptAssignment OptSemicolon
+            ;
 
 OptSemicolon : SEMICOLON
              | /* empty */

@@ -13,7 +13,7 @@
 
  #line 8 "/usr/share/bison++/bison.h"
 
-#line 15 "parser.y"
+#line 14 "parser.y"
 typedef union {
     int iconst;       /* For integer constants */
     float fconst;     /* For real constants */
@@ -246,8 +246,6 @@ typedef
 #define	PRINT	309
 #define	RIGHT_CURL_BR	310
 #define	LEFT_CURL_BR	311
-#define	L_BR	312
-#define	R_BR	313
 
 
 #line 169 "/usr/share/bison++/bison.h"
@@ -350,8 +348,6 @@ static const int INVALID_CHARACTER;
 static const int PRINT;
 static const int RIGHT_CURL_BR;
 static const int LEFT_CURL_BR;
-static const int L_BR;
-static const int R_BR;
 
 
 #line 212 "/usr/share/bison++/bison.h"
@@ -414,8 +410,6 @@ static const int R_BR;
 	,PRINT=309
 	,RIGHT_CURL_BR=310
 	,LEFT_CURL_BR=311
-	,L_BR=312
-	,R_BR=313
 
 
 #line 215 "/usr/share/bison++/bison.h"

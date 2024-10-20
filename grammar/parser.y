@@ -1,5 +1,4 @@
 %{
-    #define YYDEBUG 1
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -27,11 +26,10 @@
 %token INT_LITERAL REAL_LITERAL IDENTIFIER LEFT_BR RIGHT_BR DOT LEFT_SQ_BR RIGHT_SQ_BR COMMA QUOTE
 %token INVALID_CHARACTER PRINT RIGHT_CURL_BR LEFT_CURL_BR
 
-%left PLUS MINUS            // Add/Sub operators
-%left MULT DIV              // Mul/Div operators
 %left OR XOR AND
 %left EQ NEQ LT LTE GT GTE  // Comparison operators
-%left L_BR R_BR
+%left PLUS MINUS            // Add/Sub operators
+%left MULT DIV              // Mul/Div operators
 
 %%
 
@@ -43,11 +41,7 @@ DeclarationsAndStatements : Declarations
                           | Statements Declarations
                           ;
 
-Declarations : Declaration
-             | Declarations Declaration
-             ;
-
-Declaration : VAR IDENTIFIER OptAssignment OptSemicolon
+Declaration : VAR IDENTIFIER OptAssignment OptSemicolon ;
 
 OptSemicolon : SEMICOLON
              | /* empty */
@@ -134,7 +128,7 @@ Statement : Assignment
           | Loop
           ;
 
-Assignment : IDENTIFIER ASSIGNMENT Expression ;
+Assignment : Primary ASSIGNMENT Expression ;
 
 Print : PRINT Expression OptPrintList ;
 
@@ -183,7 +177,7 @@ Literal : INT_LITERAL
 
 ArrayLiteral : LEFT_SQ_BR OptExprList RIGHT_SQ_BR ;
 
-TupleLiteral : LEFT_BR OptTupleExprList RIGHT_BR ;
+TupleLiteral : LEFT_CURL_BR OptTupleExprList RIGHT_CURL_BR ;
 
 OptTupleExprList : TupleElement
                  | OptTupleExprList COMMA TupleElement

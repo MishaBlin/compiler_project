@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -549,8 +549,8 @@ char *yytext;
     #include "parser.tab.h"  // For token definitions
 
     extern YYSTYPE yylval;  // Declare yylval from Bison
+#line 552 "lex.yy.c"
 #line 553 "lex.yy.c"
-#line 554 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -769,7 +769,7 @@ YY_DECL
 	{
 #line 16 "lexer.l"
 
-#line 773 "lex.yy.c"
+#line 772 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1131,7 +1131,7 @@ YY_RULE_SETUP
 #line 90 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1135 "lex.yy.c"
+#line 1134 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

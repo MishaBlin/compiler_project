@@ -1,217 +1,249 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include <string.h>
+    #include <string>
+    #include <cstring>
+    #include <vector>
+    #include <iostream>
 
+    #include "ast.hpp"
+
+    Node* root = nullptr;
+
+    #define YYDEBUG 1
     extern FILE *yyin;
     extern int yylineno;
     extern int yylex();
     void yyerror(const char *s);
-%}
 
-%start Program
+%}
 
 %union {
     int iconst;       /* For integer constants */
-    float fconst;     /* For real constants */
+    double fconst;     /* For real constants */
     char* sconst;     /* For string literals */
     char* ident;      /* For identifiers */
+    Node* node;
+    char* value;
 }
+
+%code requires {
+    #include "ast.hpp"
+}
+
 
 /* Declare tokens from the lexer */
 
-%token STRING_LITERAL PLUS MINUS MULT DIV COMMENT ASSIGNMENT RANGE COLON SEMICOLON
-%token EQ NEQ LT LTE GT GTE IMPLICATION AND OR XOR NOT VAR IS THEN EMPTY END
-%token FUNCTION IN LOOP FOR WHILE IF ELSE TRUE FALSE RETURN INT REAL BOOL STRING
-%token INT_LITERAL REAL_LITERAL IDENTIFIER LEFT_BR RIGHT_BR DOT LEFT_SQ_BR RIGHT_SQ_BR COMMA QUOTE
-%token INVALID_CHARACTER PRINT RIGHT_CURL_BR LEFT_CURL_BR
+%token IDENT INTEGER REAL STRING TRUE FALSE
+%token VAR IF THEN ELSE WHILE FOR IN RETURN PRINT
+%token AND OR XOR NOT IS
+%token ASSIGN PLUS MINUS MUL DIV LT LE GT GE EQ NEQ
+%token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA SEMICOLON
+%token READINT READREAL READSTRING LOOP DOT END
+%token INT_TYPE REAL_TYPE BOOL_TYPE STRING_TYPE EMPTY VECTOR TUPLE FUNC
+%token INVALID_CHARACTER RANGE IMPLICATION MOD
 
-%left OR XOR AND
-%left EQ NEQ LT LTE GT GTE  // Comparison operators
-%left PLUS MINUS            // Add/Sub operators
-%left MULT DIV              // Mul/Div operators
+%start Program
+
+
+%type<value> IDENT
+%type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment
+%type<node> Expression Relation Factor Term Unary Literal Primary Reference Body
 
 %%
 
-Program : DeclarationsAndStatements ;
+Program
+    : Program Statement {
+        $1->Add($2); 
+        $$ = $1;
+        root = $$;
+    }
+    | /* empty */ {
+        $$ = new ProgramNode(); 
+        root = $$; 
+    }
+    ;
 
-DeclarationsAndStatements : Declarations
-                          | Statements
-                          | Declarations Statements
-                          | Statements Declarations
-                          ;
+Statement
+    : Declaration { $$ = $1; }
+    | Assignment { $$ = $1; }
+    | If { $$ = $1; }
+    | Loop
+    | Return
+    | Print { $$ = $1; }
+    ;
 
-Declarations : Declaration
-             | Declarations Declaration
-             ;
+Declaration
+    : VAR VariableDefinition {
+        $$ = $2;
+    }
+    | FunctionDeclaration
+    ;
 
-Declaration : VAR IDENTIFIER OptAssignment OptSemicolon
-            ;
+FunctionDeclaration
+    : FUNC LPAREN OptIdentifierList RPAREN FunBody;
 
-OptSemicolon : SEMICOLON
-             | /* empty */
-             ;
+VariableDefinition
+    : IDENT {
+        auto lvalue = new LocationValue(std::string($1));
+        $$ = new Declaration(lvalue); 
+    }
+    | IDENT ASSIGN Expression { 
+        auto lvalue = new LocationValue(std::string($1), (ExpressionNode*)$3);
+        $$ = new Declaration(lvalue); 
+    }
+    | IDENT ASSIGN FunctionDeclaration {}
+    ;
 
-OptAssignment : ASSIGNMENT Expression
-              | /* empty */
-              ;
+Assignment
+    : Reference ASSIGN Expression {
+        $$ = new AssignmentNode((LocationValue*)$1, (ExpressionNode*)$3);
+    }
+    ;
 
-Expression : Relation
-           | Expression LogicalOp Relation
-           ;
+If
+    : IF Expression THEN Body END {
+        $$ = new IfStatement((ExpressionNode*)$2, (BlocksNode*)$4);
+    }
+    | IF Expression THEN Body ELSE Body END {
+        $$ = new IfStatement((ExpressionNode*)$2, (BlocksNode*)$4, (BlocksNode*)$6);
+    }
+    ;
 
-LogicalOp : AND
-          | OR
-          | XOR
-          ;
+Loop
+    : WHILE Expression LOOP Body END {
+        $$ = new WhileStatement((ExpressionNode*)$2, (BlocksNode*)$4);
+    }
+    | FOR IDENT IN Expression RANGE Expression LOOP Body END {
+        $$ = new ForStatement(std::string($2), (ExpressionNode*)$4, (ExpressionNode*)$6, (BlocksNode*)$8);
+    }
+    ;
 
-Relation : Factor
-         | Relation RelOp Factor
-         ;
+Return
+    : RETURN
+    | RETURN Expression
+    ;
 
-RelOp : LT
-      | LTE
-      | GT
-      | GTE
-      | EQ
-      | NEQ
-      ;
+Print
+    : PRINT Expression { $$ = new PrintNode((ExpressionNode*)$2); }
+    ;
 
-Factor : Term
-       | Factor AddOp Term
-       ;
+Body
+    : Body Statement { 
+        $1->Add($2); 
+        $$ = $1;
+    }
+    | /* empty */ {
+        $$ = new BlocksNode();
+    }
+    ;
 
-AddOp : PLUS
-      | MINUS
-      ;
+Expression
+    : Relation { $$ = $1; }
+    | Expression AND Relation { $$ = new BooleanOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "AND"); }
+    | Expression OR Relation  { $$ = new BooleanOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "OR"); }
+    | Expression XOR Relation { $$ = new BooleanOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "XOR"); }
+    ;
 
-Term : Unary
-     | Term MulOp Unary
-     ;
+Relation
+    : Factor { $$ = $1; }
+    | Relation LT Factor  { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "<"); }
+    | Relation LE Factor  { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "<="); }
+    | Relation GT Factor  { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, ">"); }
+    | Relation GE Factor  { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, ">="); }
+    | Relation EQ Factor  { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "="); }
+    | Relation NEQ Factor { $$ = new RelationOperation((ExpressionNode*)$1, (ExpressionNode*)$3, "/="); }
+    ;
 
-MulOp : MULT
-      | DIV
-      ;
+Factor
+    : Term { $$ = $1; }
+    | Factor PLUS Term  { $$ = new ArithmeticOperation((ExpressionNode*)$1, (ExpressionNode*)$3, '+'); }
+    | Factor MINUS Term { $$ = new ArithmeticOperation((ExpressionNode*)$1, (ExpressionNode*)$3,'-'); }
+    ;
 
-Unary : OptUnary Primary OptTypeIndicator
-      | Literal
-      | LEFT_BR Expression RIGHT_BR
-      ;
+Term
+    : Unary { $$ = $1; }
+    | Term MUL Unary { $$ = new ArithmeticOperation((ExpressionNode*)$1, (ExpressionNode*)$3, '*'); }
+    | Term DIV Unary { $$ = new ArithmeticOperation((ExpressionNode*)$1, (ExpressionNode*)$3, '/'); }
+    | Term MOD Unary { $$ = new ArithmeticOperation((ExpressionNode*)$1, (ExpressionNode*)$3, '%'); }
+    ;
 
-OptUnary : PLUS
-         | MINUS
-         | NOT
-         | /* empty */
-         ;
+Unary
+    : Reference { $$ = $1; }
+    | Reference IS TypeIndicator
+    | Primary { $$ = $1; }
+    | PLUS Primary
+    | MINUS Primary
+    | NOT Primary
+    ;
 
-OptTypeIndicator : IS TypeIndicator
-                 | /* empty */
-                 ;
+Primary
+    : Literal { $$ = $1; }
+    | LPAREN Expression RPAREN { $$ = $2; }
+    | IDENT LPAREN ExpressionList RPAREN
+    ;
 
-Primary : IDENTIFIER OptTail
-        | TRUE
-        | FALSE
-        | STRING_LITERAL
-        ;
+Literal
+    : INTEGER { $$ = new ConstantNode(yylval.iconst); }
+    | REAL { $$ = new ConstantNode(yylval.fconst); }
+    | STRING { $$ = new ConstantNode(std::string(yylval.sconst)); }
+    | TRUE { $$ = new ConstantNode(true); }
+    | FALSE { $$ = new ConstantNode(false); }
+    | Tuple
+    | Array
+    | EMPTY { $$ = new ConstantNode(); }
+    ;
 
-OptTail : DOT INT_LITERAL
-        | DOT IDENTIFIER
-        | LEFT_SQ_BR Expression RIGHT_SQ_BR
-        | LEFT_BR OptExprList RIGHT_BR
-        | /* empty */
-        ;
+Tuple
+    : LBRACE TupleElementList RBRACE
+    ;
 
-OptExprList : Expression
-            | OptExprList COMMA Expression
-            | /* empty */
-            ;
+TupleElement
+    : IDENT ASSIGN Expression
+    | Expression
+    ;
 
-Statement : Assignment
-          | Print
-          | Return
-          | If
-          | Loop
-          ;
+TupleElementList
+    : TupleElement
+    | TupleElement COMMA TupleElementList
+    | /* empty */
 
-Assignment : Primary ASSIGNMENT Expression ;
+Array
+    : LBRACKET ExpressionList RBRACKET
+    ;
 
-Print : PRINT Expression OptPrintList ;
+ExpressionList
+    : Expression
+    | Expression COMMA ExpressionList
+    | /* empty */
+    ;
 
-OptPrintList : COMMA Expression
-             | /* empty */
-             ;
+Reference
+    : IDENT { $$ = new LocationValue(std::string($1)); }
+    | Reference LBRACKET INTEGER RBRACKET
+    | Reference DOT IDENT
+    | Reference DOT INTEGER
+    ;
 
-Return : RETURN OptExpression ;
+TypeIndicator
+    : INT_TYPE
+    | REAL_TYPE
+    | BOOL_TYPE
+    | STRING_TYPE
+    | EMPTY
+    | LBRACKET RBRACKET
+    | LBRACE RBRACE
+    | FUNC
+    ;
 
-OptExpression : Expression
-              | /* empty */
-              ;
-
-If : IF Expression THEN Body OptElse END ;
-
-OptElse : ELSE Body
-        | /* empty */
-        ;
-
-Loop : WHILE Expression LoopBody
-     | FOR IDENTIFIER IN TypeIndicator LoopBody
-     ;
-
-LoopBody : LOOP Body END ;
-
-TypeIndicator : INT
-              | REAL
-              | BOOL
-              | STRING
-              | EMPTY
-              | LEFT_SQ_BR RIGHT_SQ_BR
-              | LEFT_BR RIGHT_BR
-              | FUNCTION
-              | Expression RANGE Expression
-              ;
-
-Literal : INT_LITERAL
-        | REAL_LITERAL
-        | TRUE
-        | FALSE
-        | STRING_LITERAL
-        | ArrayLiteral
-        | TupleLiteral
-        | FunctionLiteral
-        ;
-
-ArrayLiteral : LEFT_SQ_BR OptExprList RIGHT_SQ_BR ;
-
-TupleLiteral : LEFT_CURL_BR OptTupleExprList RIGHT_CURL_BR ;
-
-OptTupleExprList : TupleElement
-                 | OptTupleExprList COMMA TupleElement
-                 | /* empty */
-                 ;
-
-TupleElement : OptIdentifierAssignment Expression ;
-
-OptIdentifierAssignment : IDENTIFIER ASSIGNMENT
-                        | /* empty */
-                        ;
-
-FunctionLiteral : FUNCTION LEFT_BR OptIdentifierList RIGHT_BR FunBody ;
-
-OptIdentifierList : IDENTIFIER
-                  | OptIdentifierList COMMA IDENTIFIER
+OptIdentifierList : IDENT
+                  | IDENT COMMA OptIdentifierList
                   | /* empty */
                   ;
 
 FunBody : IS Body END
         | IMPLICATION Expression
         ;
-
-Body : DeclarationsAndStatements
-     ;
-
-Statements : Statement
-           | Statements Statement
-           ;
 
 %%
 
@@ -241,6 +273,12 @@ int main(int argc, char *argv[])
       }
     } else {
       int flag = yyparse();
+      if (!root) {
+        std::cout << "Root is null" << std::endl;
+      } else {
+        std::cout << "Root is not null" << std::endl;
+        root->Print(0);
+      }
       fprintf(stderr, "Flag %d\n", flag);
     }
     fclose(yyin);

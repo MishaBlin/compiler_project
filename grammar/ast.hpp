@@ -4,10 +4,12 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace {
 static const std::string kSpace = "  ";
 }
+
 
 struct Value {
   int* ivalue;
@@ -20,6 +22,7 @@ struct Value {
   Value operator+(const Value& other) {
     Value res;
     if (this->ivalue && other.ivalue) {
+      std::cout << "here" << std::endl;
       res.ivalue = new int(*(this->ivalue) + *(other.ivalue));
       return res;
     }
@@ -63,11 +66,15 @@ struct Value {
   }
 };
 
+static std::unordered_map<std::string, Value> symbol_table;
+
 struct Node {
   Node() {}
 
   virtual void Print(int indent) {
   }
+
+  virtual void Execute() {}
 
   virtual void Add(Node* child) {}
   virtual ~Node() {};
@@ -81,6 +88,12 @@ struct ProgramNode : public Node {
     children.push_back(child);
   }
 
+  void Execute() override {
+    for (const auto child : children) {
+      child->Execute();
+    }
+  }
+ 
   void Print(int indent) {
     std::cout << "Program" << std::endl;
     for (int i = 0; i < indent; i++) {
@@ -121,6 +134,10 @@ struct PrintNode : public Node {
     }
     std::cout << "Print" << std::endl;
     expression->Print(indent + 1);
+  }
+
+  void Execute() override {
+    std::cout << *(expression->GetValue().ivalue) << std::endl;
   }
 
   ~PrintNode() {
@@ -240,12 +257,12 @@ struct BooleanOperation : public Node {
   }
 };
 
-struct RelationOperation : public Node {
+struct RelationOperation : public ExpressionNode {
   ExpressionNode* left;
   ExpressionNode* right;
   std::string operation;
 
-  RelationOperation(ExpressionNode* l, ExpressionNode* r, const std::string& operation) : Node() {
+  RelationOperation(ExpressionNode* l, ExpressionNode* r, const std::string& operation) : ExpressionNode() {
     this->left = l;
     this->right = r;
     this->operation = operation;
@@ -259,14 +276,22 @@ struct RelationOperation : public Node {
     this->left->Print(indent + 1);
     this->right->Print(indent + 1);
   }
+
+  Value GetValue() override {
+    Value res;
+    auto lval = this->left->GetValue().ivalue;
+    auto rval = this->right->GetValue().ivalue;
+    res.bvalue = new bool(*lval < *rval);
+    return res;
+  }
 };
 
-struct ArithmeticOperation : public Node {
+struct ArithmeticOperation : public ExpressionNode {
   ExpressionNode* left;
   ExpressionNode* right;
   char operation;
 
-  ArithmeticOperation(ExpressionNode* l, ExpressionNode* r, char op) : Node() {
+  ArithmeticOperation(ExpressionNode* l, ExpressionNode* r, char op) : ExpressionNode() {
     this->left = l;
     this->right = r;
     this->operation = op;
@@ -281,9 +306,12 @@ struct ArithmeticOperation : public Node {
     this->right->Print(indent + 1);
   }
 
-  Value GetValue() {
+
+
+  Value GetValue() override {
     switch (operation) {
       case '+':
+        std::cout << "operation" << std::endl;
         return this->left->GetValue() + this->right->GetValue();
       case '-':
         return this->left->GetValue() - this->right->GetValue();
@@ -299,13 +327,21 @@ struct ArithmeticOperation : public Node {
   }
 };
 
-struct LocationValue : public Node {
+struct LocationValue : public ExpressionNode {
   std::string name;
   ExpressionNode* expression;
 
-  LocationValue(const std::string& name, ExpressionNode* value = nullptr) : Node() {
+  LocationValue(const std::string& name, ExpressionNode* value = nullptr) : ExpressionNode() {
     this->name = name;
     this->expression = value;
+  }
+
+  Value GetValue() override {
+    return symbol_table[this->name];
+  }
+
+  void Execute() override {
+    symbol_table[this->name] = this->expression->GetValue();
   }
 
   void Print(int indent) override {
@@ -324,6 +360,10 @@ struct Declaration : public Node {
 
   Declaration(LocationValue* lvalue) : Node() {
     this->lvalue = lvalue;
+  }
+
+  void Execute() override {
+    this->lvalue->Execute();
   }
 
   void Print(int indent) override {
@@ -362,6 +402,12 @@ struct BlocksNode : public Node {
     children.push_back(child);
   }
 
+  void Execute() override {
+    for (const auto node : children) {
+      node->Execute();
+    }
+  }
+
   void Print(int indent) {
     for (const auto child : children) {
       child->Print(indent + 1);
@@ -384,6 +430,14 @@ struct IfStatement : public Node {
     this->condition = condition;
     this->body = body;
     this->elsebody = elsebody;
+  }
+
+  void Execute() override {
+    if (*(condition->GetValue().bvalue)) {
+      body->Execute();
+    } else {
+      elsebody->Execute();
+    }
   }
 
   void Print(int indent) override {

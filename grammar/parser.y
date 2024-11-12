@@ -278,6 +278,7 @@ int main(int argc, char *argv[])
       } else {
         std::cout << "Root is not null" << std::endl;
         root->Print(0);
+        root->Execute();
       }
       fprintf(stderr, "Flag %d\n", flag);
     }

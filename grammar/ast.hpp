@@ -6,59 +6,69 @@
 #include <vector>
 #include <unordered_map>
 
-namespace {
-static const std::string kSpace = "  ";
+namespace
+{
+  static const std::string kSpace = "  ";
 }
 
-
-struct Value {
-  int* ivalue;
-  double* dvalue;
-  std::string* svalue;
-  bool* bvalue;
+struct Value
+{
+  int *ivalue;
+  double *dvalue;
+  std::string *svalue;
+  bool *bvalue;
 
   Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr) {}
 
-  Value operator+(const Value& other) {
+  Value operator+(const Value &other)
+  {
     Value res;
-    if (this->ivalue && other.ivalue) {
-      std::cout << "here" << std::endl;
+    if (this->ivalue && other.ivalue)
+    {
       res.ivalue = new int(*(this->ivalue) + *(other.ivalue));
       return res;
     }
     throw std::logic_error("not supported");
   }
 
-  Value operator*(const Value& other) {
+  Value operator*(const Value &other)
+  {
     Value res;
-    if (this->ivalue && other.ivalue) {
+    if (this->ivalue && other.ivalue)
+    {
       res.ivalue = new int(*(this->ivalue) * *(other.ivalue));
       return res;
     }
     throw std::logic_error("not supported");
   }
 
-  Value operator-(const Value& other) {
+  Value operator-(const Value &other)
+  {
     Value res;
-    if (this->ivalue && other.ivalue) {
+    if (this->ivalue && other.ivalue)
+    {
       res.ivalue = new int(*(this->ivalue) - *(other.ivalue));
       return res;
     }
     throw std::logic_error("not supported");
   }
 
-  Value operator/(const Value& other) {
+  Value operator/(const Value &other)
+  {
     Value res;
-    if (this->ivalue && other.ivalue) {
+    if (this->ivalue && other.ivalue)
+    {
       res.ivalue = new int(*(this->ivalue) / *(other.ivalue));
       return res;
     }
     throw std::logic_error("not supported");
   }
 
-  Value operator%(const Value& other) {
+  Value operator%(const Value &other)
+  {
     Value res;
-    if (this->ivalue && other.ivalue) {
+    if (this->ivalue && other.ivalue)
+    {
       res.ivalue = new int(*(this->ivalue) % *(other.ivalue));
       return res;
     }
@@ -68,187 +78,231 @@ struct Value {
 
 static std::unordered_map<std::string, Value> symbol_table;
 
-struct Node {
+struct Node
+{
   Node() {}
 
-  virtual void Print(int indent) {
+  virtual void Print(int indent)
+  {
   }
 
   virtual void Execute() {}
 
-  virtual void Add(Node* child) {}
+  virtual void Add(Node *child) {}
   virtual ~Node() {};
 };
 
-struct ProgramNode : public Node {
-  std::vector<Node*> children;
+struct ProgramNode : public Node
+{
+  std::vector<Node *> children;
   ProgramNode() : Node() {}
 
-  void Add(Node* child) {
+  void Add(Node *child)
+  {
     children.push_back(child);
   }
 
-  void Execute() override {
-    for (const auto child : children) {
+  void Execute() override
+  {
+    for (const auto child : children)
+    {
       child->Execute();
     }
   }
- 
-  void Print(int indent) {
+
+  void Print(int indent)
+  {
     std::cout << "Program" << std::endl;
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
-    for (const auto child : children) {
+    for (const auto child : children)
+    {
       child->Print(indent + 1);
     }
   }
 
-  ~ProgramNode() {
-    for (auto child : children) {
+  ~ProgramNode()
+  {
+    for (auto child : children)
+    {
       delete child;
     }
   }
 };
 
-struct ExpressionNode : public Node {
-  ExpressionNode() : Node() {
+struct ExpressionNode : public Node
+{
+  ExpressionNode() : Node()
+  {
   }
 
-  virtual Value GetValue() {
+  virtual Value GetValue()
+  {
     return Value();
   }
 
   ~ExpressionNode() {}
 };
 
-struct PrintNode : public Node {
-  ExpressionNode* expression;
-  PrintNode(ExpressionNode* exp) : Node() {
+struct PrintNode : public Node
+{
+  ExpressionNode *expression;
+  PrintNode(ExpressionNode *exp) : Node()
+  {
     this->expression = exp;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Print" << std::endl;
     expression->Print(indent + 1);
   }
 
-  void Execute() override {
+  void Execute() override
+  {
     std::cout << *(expression->GetValue().ivalue) << std::endl;
   }
 
-  ~PrintNode() {
+  ~PrintNode()
+  {
     delete expression;
   }
 };
 
-struct RelationNode : public ExpressionNode {
+struct RelationNode : public ExpressionNode
+{
   RelationNode() : ExpressionNode() {}
 
   ~RelationNode() {}
 };
 
-struct FactorNode : public RelationNode {
+struct FactorNode : public RelationNode
+{
   FactorNode() : RelationNode() {}
 
   ~FactorNode() {}
 };
 
-struct TermNode : public FactorNode {
+struct TermNode : public FactorNode
+{
   TermNode() : FactorNode() {}
 
   ~TermNode() {}
 };
 
-struct UnaryNode : public TermNode {
+struct UnaryNode : public TermNode
+{
   UnaryNode() : TermNode() {}
 
   ~UnaryNode() {}
 };
 
-struct PrimaryNode : public UnaryNode {
+struct PrimaryNode : public UnaryNode
+{
   PrimaryNode() : UnaryNode() {}
 
   ~PrimaryNode() {}
 };
 
-struct LiteralNode : public PrimaryNode {
-  LiteralNode() : PrimaryNode() {
+struct LiteralNode : public PrimaryNode
+{
+  LiteralNode() : PrimaryNode()
+  {
   }
 
   ~LiteralNode() {}
 };
 
-struct ConstantNode : public LiteralNode {
+struct ConstantNode : public LiteralNode
+{
   Value value;
 
-  ConstantNode() : LiteralNode() {
+  ConstantNode() : LiteralNode()
+  {
     this->value = Value();
   }
 
-  ConstantNode(int value) : ConstantNode() {
+  ConstantNode(int value) : ConstantNode()
+  {
     this->value.ivalue = new int(value);
   }
 
-  ConstantNode(double value) : ConstantNode() {
+  ConstantNode(double value) : ConstantNode()
+  {
     this->value.dvalue = new double(value);
   }
 
-  ConstantNode(const std::string& value) : ConstantNode() {
+  ConstantNode(const std::string &value) : ConstantNode()
+  {
     this->value.svalue = new std::string(value);
   }
 
-  ConstantNode(bool value) : ConstantNode() {
+  ConstantNode(bool value) : ConstantNode()
+  {
     this->value.bvalue = new bool(value);
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "constant ";
-    if (this->value.ivalue) {
+    if (this->value.ivalue)
+    {
       std::cout << "integer " << *(this->value.ivalue) << std::endl;
       return;
     }
 
-    if (this->value.dvalue) {
+    if (this->value.dvalue)
+    {
       std::cout << "double " << *(this->value.dvalue) << std::endl;
       return;
     }
 
-    if (this->value.svalue) {
+    if (this->value.svalue)
+    {
       std::cout << "string " << *(this->value.svalue) << std::endl;
       return;
     }
 
-    if (this->value.bvalue) {
+    if (this->value.bvalue)
+    {
       std::cout << "bool " << *(this->value.bvalue) << std::endl;
       return;
     }
   }
 
-  Value GetValue() {
+  Value GetValue()
+  {
     return this->value;
   }
 };
 
-struct BooleanOperation : public Node {
-  ExpressionNode* left;
-  ExpressionNode* right;
+struct BooleanOperation : public Node
+{
+  ExpressionNode *left;
+  ExpressionNode *right;
   std::string operation;
 
-  BooleanOperation(ExpressionNode* l, ExpressionNode* r, const std::string& operation) : Node() {
+  BooleanOperation(ExpressionNode *l, ExpressionNode *r, const std::string &operation) : Node()
+  {
     this->left = l;
     this->right = r;
     this->operation = operation;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Operation " << this->operation << std::endl;
@@ -257,19 +311,23 @@ struct BooleanOperation : public Node {
   }
 };
 
-struct RelationOperation : public ExpressionNode {
-  ExpressionNode* left;
-  ExpressionNode* right;
+struct RelationOperation : public ExpressionNode
+{
+  ExpressionNode *left;
+  ExpressionNode *right;
   std::string operation;
 
-  RelationOperation(ExpressionNode* l, ExpressionNode* r, const std::string& operation) : ExpressionNode() {
+  RelationOperation(ExpressionNode *l, ExpressionNode *r, const std::string &operation) : ExpressionNode()
+  {
     this->left = l;
     this->right = r;
     this->operation = operation;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Operation " << this->operation << std::endl;
@@ -277,7 +335,8 @@ struct RelationOperation : public ExpressionNode {
     this->right->Print(indent + 1);
   }
 
-  Value GetValue() override {
+  Value GetValue() override
+  {
     Value res;
     auto lval = this->left->GetValue().ivalue;
     auto rval = this->right->GetValue().ivalue;
@@ -286,19 +345,23 @@ struct RelationOperation : public ExpressionNode {
   }
 };
 
-struct ArithmeticOperation : public ExpressionNode {
-  ExpressionNode* left;
-  ExpressionNode* right;
+struct ArithmeticOperation : public ExpressionNode
+{
+  ExpressionNode *left;
+  ExpressionNode *right;
   char operation;
 
-  ArithmeticOperation(ExpressionNode* l, ExpressionNode* r, char op) : ExpressionNode() {
+  ArithmeticOperation(ExpressionNode *l, ExpressionNode *r, char op) : ExpressionNode()
+  {
     this->left = l;
     this->right = r;
     this->operation = op;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Operation " << this->operation << std::endl;
@@ -306,68 +369,79 @@ struct ArithmeticOperation : public ExpressionNode {
     this->right->Print(indent + 1);
   }
 
-
-
-  Value GetValue() override {
-    switch (operation) {
-      case '+':
-        std::cout << "operation" << std::endl;
-        return this->left->GetValue() + this->right->GetValue();
-      case '-':
-        return this->left->GetValue() - this->right->GetValue();
-      case '/':
-        return this->left->GetValue() / this->right->GetValue();
-      case '%':
-        return this->left->GetValue() % this->right->GetValue();
-      case '*':
-        return this->left->GetValue() * this->right->GetValue();
-      default:
-        throw std::logic_error("invalid arithmetic operator");
+  Value GetValue() override
+  {
+    switch (operation)
+    {
+    case '+':
+      return this->left->GetValue() + this->right->GetValue();
+    case '-':
+      return this->left->GetValue() - this->right->GetValue();
+    case '/':
+      return this->left->GetValue() / this->right->GetValue();
+    case '%':
+      return this->left->GetValue() % this->right->GetValue();
+    case '*':
+      return this->left->GetValue() * this->right->GetValue();
+    default:
+      throw std::logic_error("invalid arithmetic operator");
     }
   }
 };
 
-struct LocationValue : public ExpressionNode {
+struct LocationValue : public ExpressionNode
+{
   std::string name;
-  ExpressionNode* expression;
+  ExpressionNode *expression;
 
-  LocationValue(const std::string& name, ExpressionNode* value = nullptr) : ExpressionNode() {
+  LocationValue(const std::string &name, ExpressionNode *value = nullptr) : ExpressionNode()
+  {
     this->name = name;
     this->expression = value;
   }
 
-  Value GetValue() override {
+  Value GetValue() override
+  {
     return symbol_table[this->name];
   }
 
-  void Execute() override {
+  void Execute() override
+  {
     symbol_table[this->name] = this->expression->GetValue();
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Variable Name: " << this->name << std::endl;
-    if (this->expression) {
+    if (this->expression)
+    {
       this->expression->Print(indent + 1);
     }
   }
 };
 
-struct Declaration : public Node {
-  LocationValue* lvalue;
+struct Declaration : public Node
+{
+  LocationValue *lvalue;
 
-  Declaration(LocationValue* lvalue) : Node() {
+  Declaration(LocationValue *lvalue) : Node()
+  {
     this->lvalue = lvalue;
   }
 
-  void Execute() override {
+  void Execute() override
+  {
     this->lvalue->Execute();
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Variable Declaration" << std::endl;
@@ -375,17 +449,26 @@ struct Declaration : public Node {
   }
 };
 
-struct AssignmentNode : public Node {
-  LocationValue* lvalue;
-  ExpressionNode* new_value;
+struct AssignmentNode : public Node
+{
+  LocationValue *lvalue;
+  ExpressionNode *new_value;
 
-  AssignmentNode(LocationValue* lvalue, ExpressionNode* new_value) : Node() {
+  AssignmentNode(LocationValue *lvalue, ExpressionNode *new_value) : Node()
+  {
     this->lvalue = lvalue;
     this->new_value = new_value;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Execute() override
+  {
+    symbol_table[this->lvalue->name] = this->new_value->GetValue();
+  }
+
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "Assignment" << std::endl;
@@ -394,72 +477,95 @@ struct AssignmentNode : public Node {
   }
 };
 
-struct BlocksNode : public Node {
-  std::vector<Node*> children;
+struct BlocksNode : public Node
+{
+  std::vector<Node *> children;
   BlocksNode() : Node() {}
 
-  void Add(Node* child) {
+  void Add(Node *child)
+  {
     children.push_back(child);
   }
 
-  void Execute() override {
-    for (const auto node : children) {
+  void Execute() override
+  {
+    for (const auto node : children)
+    {
       node->Execute();
     }
   }
 
-  void Print(int indent) {
-    for (const auto child : children) {
+  void Print(int indent)
+  {
+    for (const auto child : children)
+    {
       child->Print(indent + 1);
     }
   }
 
-  ~BlocksNode() {
-    for (auto child : children) {
+  ~BlocksNode()
+  {
+    for (auto child : children)
+    {
       delete child;
     }
   }
 };
 
-struct IfStatement : public Node {
-  ExpressionNode* condition;
-  BlocksNode* body;
-  BlocksNode* elsebody;
+struct IfStatement : public Node
+{
+  ExpressionNode *condition;
+  BlocksNode *body;
+  BlocksNode *elsebody;
 
-  IfStatement(ExpressionNode* condition, BlocksNode* body, BlocksNode* elsebody = nullptr) : Node() {
+  IfStatement(ExpressionNode *condition, BlocksNode *body, BlocksNode *elsebody = nullptr) : Node()
+  {
     this->condition = condition;
     this->body = body;
     this->elsebody = elsebody;
   }
 
-  void Execute() override {
-    if (*(condition->GetValue().bvalue)) {
+  void Execute() override
+  {
+    if (*(condition->GetValue().bvalue))
+    {
       body->Execute();
-    } else {
+    }
+    else
+    {
+      if (elsebody == nullptr) {
+        return;
+      }
       elsebody->Execute();
     }
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "IfStatement:" << std::endl;
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Condition:" << std::endl;
     this->condition->Print(indent + 2);
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Body:" << std::endl;
     body->Print(indent + 2);
 
-    if (elsebody) {
-      for (int i = 0; i < indent; i++) {
+    if (elsebody)
+    {
+      for (int i = 0; i < indent; i++)
+      {
         std::cout << kSpace;
       }
       std::cout << "  ElseBody:" << std::endl;
@@ -468,28 +574,42 @@ struct IfStatement : public Node {
   }
 };
 
-struct WhileStatement : public Node {
-  ExpressionNode* condition;
-  BlocksNode* body;
+struct WhileStatement : public Node
+{
+  ExpressionNode *condition;
+  BlocksNode *body;
 
-  WhileStatement(ExpressionNode* condition, BlocksNode* body) : Node() {
+  WhileStatement(ExpressionNode *condition, BlocksNode *body) : Node()
+  {
     this->condition = condition;
     this->body = body;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Execute() override
+  {
+    while (*(condition->GetValue().bvalue))
+    {
+      body->Execute();
+    }
+  }
+
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "WhileLoop:" << std::endl;
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Condition:" << std::endl;
     this->condition->Print(indent + 2);
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Body:" << std::endl;
@@ -497,38 +617,61 @@ struct WhileStatement : public Node {
   }
 };
 
-struct ForStatement : public Node {
-  ExpressionNode* begin;
-  ExpressionNode* end;
+struct ForStatement : public Node
+{
+  ExpressionNode *begin;
+  ExpressionNode *end;
   std::string it_name;
-  BlocksNode* body;
+  BlocksNode *body;
 
-  ForStatement(const std::string& it_name, ExpressionNode* begin, ExpressionNode* end, BlocksNode* body) : Node() {
+  ForStatement(const std::string &it_name, ExpressionNode *begin, ExpressionNode *end, BlocksNode *body) : Node()
+  {
     this->begin = begin;
     this->end = end;
     this->it_name = it_name;
     this->body = body;
   }
 
-  void Print(int indent) override {
-    for (int i = 0; i < indent; i++) {
+  void Execute() override
+  {
+    int start = *(this->begin->GetValue().ivalue);
+    int end = *(this->end->GetValue().ivalue);
+    symbol_table[this->it_name] = this->begin->GetValue();
+
+    for (int i = start; i <= end; i++)
+    {
+      auto new_it = Value();
+      new_it.ivalue = new int(i);
+      symbol_table[this->it_name] = new_it;
+      this->body->Execute();
+    }
+    symbol_table.erase(this->it_name);
+  }
+
+  void Print(int indent) override
+  {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "ForStatement: Iterator: " << this->it_name << std::endl;
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Begin:" << std::endl;
     this->begin->Print(indent + 2);
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  End:" << std::endl;
     this->end->Print(indent + 2);
 
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent; i++)
+    {
       std::cout << kSpace;
     }
     std::cout << "  Body:" << std::endl;

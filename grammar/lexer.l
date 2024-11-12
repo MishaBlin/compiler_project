@@ -24,6 +24,7 @@ real       {integer}("."{integer})?("E"("+"|"-")?{integer})?
 "-"              { printf("MINUS: %s\n", yytext); return MINUS; }
 "*"              { printf("MUL: %s\n", yytext); return MUL; }
 "/"              { printf("DIV: %s\n", yytext); return DIV; }
+"%"              { printf("MOD: %s\n", yytext); return MOD; }
 ":="             { printf("ASSIGN: %s\n", yytext); return ASSIGN; }
 ".."             { printf("RANGE: %s\n", yytext); return RANGE; }
 ";"              { printf("SEMICOLON: %s\n", yytext); return SEMICOLON; }

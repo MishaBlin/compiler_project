@@ -13,6 +13,9 @@
     #define YYDEBUG 1
     extern FILE *yyin;
     extern int yylineno;
+
+    Context* curContext = nullptr;
+
     extern int yylex();
     void yyerror(const char *s);
 
@@ -56,10 +59,13 @@ Program
     : Program Statement {
         $1->Add($2); 
         $$ = $1;
+
         root = $$;
     }
     | /* empty */ {
-        $$ = new ProgramNode(); 
+        auto programContext = new Context(curContext);
+        curContext = programContext;
+        $$ = new ProgramNode(programContext); 
         root = $$; 
     }
     ;
@@ -85,11 +91,13 @@ FunctionDeclaration
 
 VariableDefinition
     : IDENT {
-        auto lvalue = new LocationValue(std::string($1));
+        auto lvalue = new LocationValue(std::string($1), curContext);
         $$ = new Declaration(lvalue); 
     }
     | IDENT ASSIGN Expression { 
-        auto lvalue = new LocationValue(std::string($1), (ExpressionNode*)$3);
+        // std::cout << "Definition" << std::endl;
+        // std::cout << curContext << std::endl;
+        auto lvalue = new LocationValue(std::string($1), curContext, (ExpressionNode*)$3);
         $$ = new Declaration(lvalue); 
     }
     | IDENT ASSIGN FunctionDeclaration {}
@@ -134,7 +142,9 @@ Body
         $$ = $1;
     }
     | /* empty */ {
-        $$ = new BlocksNode();
+        auto context = new Context(curContext);
+        curContext = context;
+        $$ = new BlocksNode(context);
     }
     ;
 
@@ -219,7 +229,7 @@ ExpressionList
     ;
 
 Reference
-    : IDENT { $$ = new LocationValue(std::string($1)); }
+    : IDENT { $$ = new LocationValue(std::string($1), curContext); }
     | Reference LBRACKET INTEGER RBRACKET
     | Reference DOT IDENT
     | Reference DOT INTEGER
@@ -273,6 +283,7 @@ int main(int argc, char *argv[])
       }
     } else {
       int flag = yyparse();
+      
       if (!root) {
         std::cout << "Root is null" << std::endl;
       } else {

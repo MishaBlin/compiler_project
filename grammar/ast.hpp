@@ -11,6 +11,9 @@ namespace
 	static const std::string kSpace = "  ";
 }
 
+
+struct ExpressionNode;
+
 struct Value
 {
 	int *ivalue;
@@ -129,11 +132,33 @@ struct Value
 	}
 };
 
+struct Context {
+	Context* childContext;
+	Context* parentContext; 
+	std::unordered_map<std::string, ExpressionNode*> locals;
+
+	Context(Context* child=nullptr, Context* parent=nullptr) {
+		this->parentContext = parent;
+		this->childContext = child;
+	}
+	
+	~Context() {
+		delete parentContext;
+	}
+};
+
 static std::unordered_map<std::string, Value> symbol_table;
 
 struct Node
 {
-	Node() {}
+	Context* context;
+	Node(Context* context) {
+		this->context = context;
+	}
+
+	Node() {
+		this->context = nullptr;
+	}
 
 	virtual void Print(int indent)
 	{
@@ -142,13 +167,15 @@ struct Node
 	virtual void Execute() {}
 
 	virtual void Add(Node *child) {}
-	virtual ~Node() {};
+	virtual ~Node() {
+		delete context;
+	};
 };
 
 struct ProgramNode : public Node
 {
 	std::vector<Node *> children;
-	ProgramNode() : Node() {}
+	ProgramNode(Context* context) : Node(context) {}
 
 	void Add(Node *child)
 	{
@@ -182,14 +209,16 @@ struct ProgramNode : public Node
 		{
 			delete child;
 		}
+		delete context;
 	}
 };
 
 struct ExpressionNode : public Node
 {
-	ExpressionNode() : Node()
+	ExpressionNode(Context* context=nullptr) : Node(context)
 	{
 	}
+
 
 	virtual Value GetValue()
 	{
@@ -511,8 +540,9 @@ struct LocationValue : public ExpressionNode
 {
 	std::string name;
 	ExpressionNode *expression;
+	
 
-	LocationValue(const std::string &name, ExpressionNode *value = nullptr) : ExpressionNode()
+	LocationValue(const std::string &name,  Context* context, ExpressionNode *value = nullptr) : ExpressionNode(context)
 	{
 		this->name = name;
 		this->expression = value;
@@ -520,12 +550,33 @@ struct LocationValue : public ExpressionNode
 
 	Value GetValue() override
 	{
-		return symbol_table[this->name];
+		auto curContext = context;
+		int i = 0;
+		while (context) {
+			if (context->locals.find(this->name) != context->locals.end()) {
+
+				for (const auto[key, value] : context->locals) {
+					std::cout << "key: " << key << " value at: " << value << std::endl;
+				}
+
+				std::cout<<i<<std::endl;
+				return context->locals[this->name]->GetValue();
+			}
+			i++;
+			curContext = context->parentContext;
+		}
+		throw std::logic_error("unknown variable");
 	}
 
 	void Execute() override
 	{
-		symbol_table[this->name] = this->expression->GetValue();
+		// std::cout << "Declaring var" << std::endl;
+		// std::cout << *(this->expression->GetValue().ivalue) << std::endl;
+		// if (context == nullptr) {
+		// 	std::cout << "Null" << std::endl;
+		// }
+		context->locals[this->name] = this->expression;
+		// std::cout << "Declaring var 2" << std::endl;
 	}
 
 	void Print(int indent) override
@@ -602,7 +653,7 @@ struct AssignmentNode : public Node
 struct BlocksNode : public Node
 {
 	std::vector<Node *> children;
-	BlocksNode() : Node() {}
+	BlocksNode(Context* context) : Node(context) {}
 
 	void Add(Node *child)
 	{

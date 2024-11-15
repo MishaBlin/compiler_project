@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 30 "parser.y"
+#line 33 "parser.y"
 
     #include "ast.hpp"
 
@@ -125,7 +125,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "parser.y"
+#line 24 "parser.y"
 
     int iconst;       /* For integer constants */
     double fconst;     /* For real constants */

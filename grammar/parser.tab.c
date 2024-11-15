@@ -83,11 +83,14 @@
     #define YYDEBUG 1
     extern FILE *yyin;
     extern int yylineno;
+
+    Context* curContext = nullptr;
+
     extern int yylex();
     void yyerror(const char *s);
 
 
-#line 91 "parser.tab.c"
+#line 94 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -594,15 +597,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    56,    56,    61,    68,    69,    70,    71,    72,    73,
-      77,    80,    84,    87,    91,    95,    99,   105,   108,   114,
-     117,   123,   124,   128,   132,   136,   142,   143,   144,   145,
-     149,   150,   151,   152,   153,   154,   155,   159,   160,   161,
-     165,   166,   167,   168,   172,   173,   174,   175,   176,   177,
-     181,   182,   183,   187,   188,   189,   190,   191,   192,   193,
-     194,   198,   202,   203,   207,   208,   209,   212,   216,   217,
-     218,   222,   223,   224,   225,   229,   230,   231,   232,   233,
-     234,   235,   236,   239,   240,   241,   244,   245
+       0,    59,    59,    65,    74,    75,    76,    77,    78,    79,
+      83,    86,    90,    93,    97,   103,   107,   113,   116,   122,
+     125,   131,   132,   136,   140,   144,   152,   153,   154,   155,
+     159,   160,   161,   162,   163,   164,   165,   169,   170,   171,
+     175,   176,   177,   178,   182,   183,   184,   185,   186,   187,
+     191,   192,   193,   197,   198,   199,   200,   201,   202,   203,
+     204,   208,   212,   213,   217,   218,   219,   222,   226,   227,
+     228,   232,   233,   234,   235,   239,   240,   241,   242,   243,
+     244,   245,   246,   249,   250,   251,   254,   255
 };
 #endif
 
@@ -1290,319 +1293,326 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Program: Program Statement  */
-#line 56 "parser.y"
+#line 59 "parser.y"
                         {
         (yyvsp[-1].node)->Add((yyvsp[0].node)); 
         (yyval.node) = (yyvsp[-1].node);
+
         root = (yyval.node);
     }
-#line 1300 "parser.tab.c"
+#line 1304 "parser.tab.c"
     break;
 
   case 3: /* Program: %empty  */
-#line 61 "parser.y"
+#line 65 "parser.y"
                   {
-        (yyval.node) = new ProgramNode(); 
+        auto programContext = new Context(curContext);
+        curContext = programContext;
+        (yyval.node) = new ProgramNode(programContext); 
         root = (yyval.node); 
     }
-#line 1309 "parser.tab.c"
-    break;
-
-  case 4: /* Statement: Declaration  */
-#line 68 "parser.y"
-                  { (yyval.node) = (yyvsp[0].node); }
 #line 1315 "parser.tab.c"
     break;
 
-  case 5: /* Statement: Assignment  */
-#line 69 "parser.y"
-                 { (yyval.node) = (yyvsp[0].node); }
+  case 4: /* Statement: Declaration  */
+#line 74 "parser.y"
+                  { (yyval.node) = (yyvsp[0].node); }
 #line 1321 "parser.tab.c"
     break;
 
-  case 6: /* Statement: If  */
-#line 70 "parser.y"
-         { (yyval.node) = (yyvsp[0].node); }
+  case 5: /* Statement: Assignment  */
+#line 75 "parser.y"
+                 { (yyval.node) = (yyvsp[0].node); }
 #line 1327 "parser.tab.c"
     break;
 
-  case 9: /* Statement: Print  */
-#line 73 "parser.y"
-            { (yyval.node) = (yyvsp[0].node); }
+  case 6: /* Statement: If  */
+#line 76 "parser.y"
+         { (yyval.node) = (yyvsp[0].node); }
 #line 1333 "parser.tab.c"
     break;
 
+  case 9: /* Statement: Print  */
+#line 79 "parser.y"
+            { (yyval.node) = (yyvsp[0].node); }
+#line 1339 "parser.tab.c"
+    break;
+
   case 10: /* Declaration: VAR VariableDefinition  */
-#line 77 "parser.y"
+#line 83 "parser.y"
                              {
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1341 "parser.tab.c"
+#line 1347 "parser.tab.c"
     break;
 
   case 13: /* VariableDefinition: IDENT  */
-#line 87 "parser.y"
+#line 93 "parser.y"
             {
-        auto lvalue = new LocationValue(std::string((yyvsp[0].value)));
+        auto lvalue = new LocationValue(std::string((yyvsp[0].value)), curContext);
         (yyval.node) = new Declaration(lvalue); 
     }
-#line 1350 "parser.tab.c"
+#line 1356 "parser.tab.c"
     break;
 
   case 14: /* VariableDefinition: IDENT ASSIGN Expression  */
-#line 91 "parser.y"
+#line 97 "parser.y"
                               { 
-        auto lvalue = new LocationValue(std::string((yyvsp[-2].value)), (ExpressionNode*)(yyvsp[0].node));
+        // std::cout << "Definition" << std::endl;
+        // std::cout << curContext << std::endl;
+        auto lvalue = new LocationValue(std::string((yyvsp[-2].value)), curContext, (ExpressionNode*)(yyvsp[0].node));
         (yyval.node) = new Declaration(lvalue); 
     }
-#line 1359 "parser.tab.c"
+#line 1367 "parser.tab.c"
     break;
 
   case 15: /* VariableDefinition: IDENT ASSIGN FunctionDeclaration  */
-#line 95 "parser.y"
+#line 103 "parser.y"
                                        {}
-#line 1365 "parser.tab.c"
-    break;
-
-  case 16: /* Assignment: Reference ASSIGN Expression  */
-#line 99 "parser.y"
-                                  {
-        (yyval.node) = new AssignmentNode((LocationValue*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node));
-    }
 #line 1373 "parser.tab.c"
     break;
 
-  case 17: /* If: IF Expression THEN Body END  */
-#line 105 "parser.y"
+  case 16: /* Assignment: Reference ASSIGN Expression  */
+#line 107 "parser.y"
                                   {
-        (yyval.node) = new IfStatement((ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
+        (yyval.node) = new AssignmentNode((LocationValue*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node));
     }
 #line 1381 "parser.tab.c"
     break;
 
-  case 18: /* If: IF Expression THEN Body ELSE Body END  */
-#line 108 "parser.y"
-                                            {
-        (yyval.node) = new IfStatement((ExpressionNode*)(yyvsp[-5].node), (BlocksNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
+  case 17: /* If: IF Expression THEN Body END  */
+#line 113 "parser.y"
+                                  {
+        (yyval.node) = new IfStatement((ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
     }
 #line 1389 "parser.tab.c"
     break;
 
-  case 19: /* Loop: WHILE Expression LOOP Body END  */
-#line 114 "parser.y"
-                                     {
-        (yyval.node) = new WhileStatement((ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
+  case 18: /* If: IF Expression THEN Body ELSE Body END  */
+#line 116 "parser.y"
+                                            {
+        (yyval.node) = new IfStatement((ExpressionNode*)(yyvsp[-5].node), (BlocksNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
     }
 #line 1397 "parser.tab.c"
     break;
 
-  case 20: /* Loop: FOR IDENT IN Expression RANGE Expression LOOP Body END  */
-#line 117 "parser.y"
-                                                             {
-        (yyval.node) = new ForStatement(std::string((yyvsp[-7].value)), (ExpressionNode*)(yyvsp[-5].node), (ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
+  case 19: /* Loop: WHILE Expression LOOP Body END  */
+#line 122 "parser.y"
+                                     {
+        (yyval.node) = new WhileStatement((ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
     }
 #line 1405 "parser.tab.c"
     break;
 
+  case 20: /* Loop: FOR IDENT IN Expression RANGE Expression LOOP Body END  */
+#line 125 "parser.y"
+                                                             {
+        (yyval.node) = new ForStatement(std::string((yyvsp[-7].value)), (ExpressionNode*)(yyvsp[-5].node), (ExpressionNode*)(yyvsp[-3].node), (BlocksNode*)(yyvsp[-1].node));
+    }
+#line 1413 "parser.tab.c"
+    break;
+
   case 23: /* Print: PRINT Expression  */
-#line 128 "parser.y"
+#line 136 "parser.y"
                        { (yyval.node) = new PrintNode((ExpressionNode*)(yyvsp[0].node)); }
-#line 1411 "parser.tab.c"
+#line 1419 "parser.tab.c"
     break;
 
   case 24: /* Body: Body Statement  */
-#line 132 "parser.y"
+#line 140 "parser.y"
                      { 
         (yyvsp[-1].node)->Add((yyvsp[0].node)); 
         (yyval.node) = (yyvsp[-1].node);
     }
-#line 1420 "parser.tab.c"
-    break;
-
-  case 25: /* Body: %empty  */
-#line 136 "parser.y"
-                  {
-        (yyval.node) = new BlocksNode();
-    }
 #line 1428 "parser.tab.c"
     break;
 
+  case 25: /* Body: %empty  */
+#line 144 "parser.y"
+                  {
+        auto context = new Context(curContext);
+        curContext = context;
+        (yyval.node) = new BlocksNode(context);
+    }
+#line 1438 "parser.tab.c"
+    break;
+
   case 26: /* Expression: Relation  */
-#line 142 "parser.y"
+#line 152 "parser.y"
                { (yyval.node) = (yyvsp[0].node); }
-#line 1434 "parser.tab.c"
+#line 1444 "parser.tab.c"
     break;
 
   case 27: /* Expression: Expression AND Relation  */
-#line 143 "parser.y"
+#line 153 "parser.y"
                               { (yyval.node) = new BooleanOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "AND"); }
-#line 1440 "parser.tab.c"
+#line 1450 "parser.tab.c"
     break;
 
   case 28: /* Expression: Expression OR Relation  */
-#line 144 "parser.y"
+#line 154 "parser.y"
                               { (yyval.node) = new BooleanOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "OR"); }
-#line 1446 "parser.tab.c"
+#line 1456 "parser.tab.c"
     break;
 
   case 29: /* Expression: Expression XOR Relation  */
-#line 145 "parser.y"
+#line 155 "parser.y"
                               { (yyval.node) = new BooleanOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "XOR"); }
-#line 1452 "parser.tab.c"
+#line 1462 "parser.tab.c"
     break;
 
   case 30: /* Relation: Factor  */
-#line 149 "parser.y"
+#line 159 "parser.y"
              { (yyval.node) = (yyvsp[0].node); }
-#line 1458 "parser.tab.c"
+#line 1468 "parser.tab.c"
     break;
 
   case 31: /* Relation: Relation LT Factor  */
-#line 150 "parser.y"
+#line 160 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "<"); }
-#line 1464 "parser.tab.c"
+#line 1474 "parser.tab.c"
     break;
 
   case 32: /* Relation: Relation LE Factor  */
-#line 151 "parser.y"
+#line 161 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "<="); }
-#line 1470 "parser.tab.c"
+#line 1480 "parser.tab.c"
     break;
 
   case 33: /* Relation: Relation GT Factor  */
-#line 152 "parser.y"
+#line 162 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), ">"); }
-#line 1476 "parser.tab.c"
+#line 1486 "parser.tab.c"
     break;
 
   case 34: /* Relation: Relation GE Factor  */
-#line 153 "parser.y"
+#line 163 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), ">="); }
-#line 1482 "parser.tab.c"
+#line 1492 "parser.tab.c"
     break;
 
   case 35: /* Relation: Relation EQ Factor  */
-#line 154 "parser.y"
+#line 164 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "="); }
-#line 1488 "parser.tab.c"
+#line 1498 "parser.tab.c"
     break;
 
   case 36: /* Relation: Relation NEQ Factor  */
-#line 155 "parser.y"
+#line 165 "parser.y"
                           { (yyval.node) = new RelationOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), "/="); }
-#line 1494 "parser.tab.c"
+#line 1504 "parser.tab.c"
     break;
 
   case 37: /* Factor: Term  */
-#line 159 "parser.y"
+#line 169 "parser.y"
            { (yyval.node) = (yyvsp[0].node); }
-#line 1500 "parser.tab.c"
+#line 1510 "parser.tab.c"
     break;
 
   case 38: /* Factor: Factor PLUS Term  */
-#line 160 "parser.y"
+#line 170 "parser.y"
                         { (yyval.node) = new ArithmeticOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), '+'); }
-#line 1506 "parser.tab.c"
+#line 1516 "parser.tab.c"
     break;
 
   case 39: /* Factor: Factor MINUS Term  */
-#line 161 "parser.y"
+#line 171 "parser.y"
                         { (yyval.node) = new ArithmeticOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node),'-'); }
-#line 1512 "parser.tab.c"
+#line 1522 "parser.tab.c"
     break;
 
   case 40: /* Term: Unary  */
-#line 165 "parser.y"
+#line 175 "parser.y"
             { (yyval.node) = (yyvsp[0].node); }
-#line 1518 "parser.tab.c"
+#line 1528 "parser.tab.c"
     break;
 
   case 41: /* Term: Term MUL Unary  */
-#line 166 "parser.y"
+#line 176 "parser.y"
                      { (yyval.node) = new ArithmeticOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), '*'); }
-#line 1524 "parser.tab.c"
+#line 1534 "parser.tab.c"
     break;
 
   case 42: /* Term: Term DIV Unary  */
-#line 167 "parser.y"
+#line 177 "parser.y"
                      { (yyval.node) = new ArithmeticOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), '/'); }
-#line 1530 "parser.tab.c"
+#line 1540 "parser.tab.c"
     break;
 
   case 43: /* Term: Term MOD Unary  */
-#line 168 "parser.y"
+#line 178 "parser.y"
                      { (yyval.node) = new ArithmeticOperation((ExpressionNode*)(yyvsp[-2].node), (ExpressionNode*)(yyvsp[0].node), '%'); }
-#line 1536 "parser.tab.c"
+#line 1546 "parser.tab.c"
     break;
 
   case 44: /* Unary: Reference  */
-#line 172 "parser.y"
+#line 182 "parser.y"
                 { (yyval.node) = (yyvsp[0].node); }
-#line 1542 "parser.tab.c"
+#line 1552 "parser.tab.c"
     break;
 
   case 46: /* Unary: Primary  */
-#line 174 "parser.y"
+#line 184 "parser.y"
               { (yyval.node) = (yyvsp[0].node); }
-#line 1548 "parser.tab.c"
+#line 1558 "parser.tab.c"
     break;
 
   case 50: /* Primary: Literal  */
-#line 181 "parser.y"
+#line 191 "parser.y"
               { (yyval.node) = (yyvsp[0].node); }
-#line 1554 "parser.tab.c"
+#line 1564 "parser.tab.c"
     break;
 
   case 51: /* Primary: LPAREN Expression RPAREN  */
-#line 182 "parser.y"
+#line 192 "parser.y"
                                { (yyval.node) = (yyvsp[-1].node); }
-#line 1560 "parser.tab.c"
+#line 1570 "parser.tab.c"
     break;
 
   case 53: /* Literal: INTEGER  */
-#line 187 "parser.y"
+#line 197 "parser.y"
               { (yyval.node) = new ConstantNode(yylval.iconst); }
-#line 1566 "parser.tab.c"
+#line 1576 "parser.tab.c"
     break;
 
   case 54: /* Literal: REAL  */
-#line 188 "parser.y"
+#line 198 "parser.y"
            { (yyval.node) = new ConstantNode(yylval.fconst); }
-#line 1572 "parser.tab.c"
+#line 1582 "parser.tab.c"
     break;
 
   case 55: /* Literal: STRING  */
-#line 189 "parser.y"
+#line 199 "parser.y"
              { (yyval.node) = new ConstantNode(yylval.sconst); }
-#line 1578 "parser.tab.c"
+#line 1588 "parser.tab.c"
     break;
 
   case 56: /* Literal: TRUE  */
-#line 190 "parser.y"
+#line 200 "parser.y"
            { (yyval.node) = new ConstantNode(true); }
-#line 1584 "parser.tab.c"
+#line 1594 "parser.tab.c"
     break;
 
   case 57: /* Literal: FALSE  */
-#line 191 "parser.y"
+#line 201 "parser.y"
             { (yyval.node) = new ConstantNode(false); }
-#line 1590 "parser.tab.c"
+#line 1600 "parser.tab.c"
     break;
 
   case 60: /* Literal: EMPTY  */
-#line 194 "parser.y"
+#line 204 "parser.y"
             { (yyval.node) = new ConstantNode(); }
-#line 1596 "parser.tab.c"
+#line 1606 "parser.tab.c"
     break;
 
   case 71: /* Reference: IDENT  */
-#line 222 "parser.y"
-            { (yyval.node) = new LocationValue(std::string((yyvsp[0].value))); }
-#line 1602 "parser.tab.c"
+#line 232 "parser.y"
+            { (yyval.node) = new LocationValue(std::string((yyvsp[0].value)), curContext); }
+#line 1612 "parser.tab.c"
     break;
 
 
-#line 1606 "parser.tab.c"
+#line 1616 "parser.tab.c"
 
       default: break;
     }
@@ -1795,7 +1805,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 248 "parser.y"
+#line 258 "parser.y"
 
 
 void yyerror(const char *s)
@@ -1824,6 +1834,7 @@ int main(int argc, char *argv[])
       }
     } else {
       int flag = yyparse();
+      
       if (!root) {
         std::cout << "Root is null" << std::endl;
       } else {

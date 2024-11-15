@@ -248,55 +248,51 @@ struct PrintNode : public Node
 	}
 };
 
-struct RelationNode : public ExpressionNode
-{
-	RelationNode() : ExpressionNode() {}
 
-	~RelationNode() {}
-};
+struct Elements : public ExpressionNode {
+	std::vector<ExpressionNode*> elements;
 
-struct FactorNode : public RelationNode
-{
-	FactorNode() : RelationNode() {}
-
-	~FactorNode() {}
-};
-
-struct TermNode : public FactorNode
-{
-	TermNode() : FactorNode() {}
-
-	~TermNode() {}
-};
-
-struct UnaryNode : public TermNode
-{
-	UnaryNode() : TermNode() {}
-
-	~UnaryNode() {}
-};
-
-struct PrimaryNode : public UnaryNode
-{
-	PrimaryNode() : UnaryNode() {}
-
-	~PrimaryNode() {}
-};
-
-struct LiteralNode : public PrimaryNode
-{
-	LiteralNode() : PrimaryNode()
-	{
+	Elements() : ExpressionNode() {
 	}
 
-	~LiteralNode() {}
+	Elements(Elements* old_elems) : ExpressionNode() {
+		this->elements = old_elems->elements;
+	}
+
+	void Add(ExpressionNode* elem) {
+		this->elements.push_back(elem);
+	}
+
+	void Execute () override {}
 };
 
-struct ConstantNode : public LiteralNode
+
+struct ArrayNode : public ExpressionNode {
+	Elements* elements;
+
+	ArrayNode(Elements* elements) : ExpressionNode() {
+		this->elements = elements;
+	}
+
+	void Print(int indent) override {
+		for (int i = 0; i < indent; i++)
+		{
+			std::cout << kSpace;
+		}
+		std::cout << "Array. Elements: " << std::endl;
+		for (auto element : elements->elements) {
+			element->Print(indent + 1);
+		};
+	}
+};
+
+
+
+struct ConstantNode : public ExpressionNode
 {
 	Value value;
 
-	ConstantNode() : LiteralNode()
+	ConstantNode() : ExpressionNode()
 	{
 		this->value = Value();
 	}

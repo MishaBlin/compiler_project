@@ -104,8 +104,8 @@ Grammar
 
    66 Array: LBRACKET ExpressionList RBRACKET
 
-   67 ExpressionList: Expression
-   68               | Expression COMMA ExpressionList
+   67 ExpressionList: ExpressionList COMMA Expression
+   68               | Expression
    69               | ε
 
    70 Reference: IDENT
@@ -171,7 +171,7 @@ Terminals, with rules where they appear
     RBRACE (292) 60 80
     LBRACKET (293) 66 71 79
     RBRACKET (294) 66 71 79
-    COMMA (295) 64 68 83
+    COMMA (295) 64 67 83
     SEMICOLON (296)
     READINT (297)
     READREAL (298)
@@ -260,12 +260,12 @@ Nonterminals, with rules where they appear
     TupleElementList (81)
         on left: 63 64 65
         on right: 60 64
-    Array (82)
+    Array <node> (82)
         on left: 66
         on right: 58
-    ExpressionList (83)
+    ExpressionList <node> (83)
         on left: 67 68 69
-        on right: 51 66 68
+        on right: 51 66 67
     Reference <node> (84)
         on left: 70 71 72 73
         on right: 15 43 44 71 72 73
@@ -1145,22 +1145,22 @@ State 64
    26 Expression: Expression • AND Relation
    27           | Expression • OR Relation
    28           | Expression • XOR Relation
-   67 ExpressionList: Expression •
-   68               | Expression • COMMA ExpressionList
+   68 ExpressionList: Expression •
 
-    AND    shift, and go to state 67
-    OR     shift, and go to state 68
-    XOR    shift, and go to state 69
-    COMMA  shift, and go to state 97
+    AND  shift, and go to state 67
+    OR   shift, and go to state 68
+    XOR  shift, and go to state 69
 
-    $default  reduce using rule 67 (ExpressionList)
+    $default  reduce using rule 68 (ExpressionList)
 
 
 State 65
 
    66 Array: LBRACKET ExpressionList • RBRACKET
+   67 ExpressionList: ExpressionList • COMMA Expression
 
-    RBRACKET  shift, and go to state 98
+    RBRACKET  shift, and go to state 97
+    COMMA     shift, and go to state 98
 
 
 State 66
@@ -1691,8 +1691,10 @@ State 91
 State 92
 
    51 Primary: IDENT LPAREN ExpressionList • RPAREN
+   67 ExpressionList: ExpressionList • COMMA Expression
 
     RPAREN  shift, and go to state 128
+    COMMA   shift, and go to state 98
 
 
 State 93
@@ -1775,7 +1777,14 @@ State 96
 
 State 97
 
-   68 ExpressionList: Expression COMMA • ExpressionList
+   66 Array: LBRACKET ExpressionList RBRACKET •
+
+    $default  reduce using rule 66 (Array)
+
+
+State 98
+
+   67 ExpressionList: ExpressionList COMMA • Expression
 
     IDENT     shift, and go to state 22
     INTEGER   shift, and go to state 23
@@ -1791,26 +1800,16 @@ State 97
     LBRACKET  shift, and go to state 33
     EMPTY     shift, and go to state 34
 
-    $default  reduce using rule 69 (ExpressionList)
-
-    Expression      go to state 64
-    Relation        go to state 36
-    Factor          go to state 37
-    Term            go to state 38
-    Unary           go to state 39
-    Primary         go to state 40
-    Literal         go to state 41
-    Tuple           go to state 42
-    Array           go to state 43
-    ExpressionList  go to state 131
-    Reference       go to state 44
-
-
-State 98
-
-   66 Array: LBRACKET ExpressionList RBRACKET •
-
-    $default  reduce using rule 66 (Array)
+    Expression  go to state 131
+    Relation    go to state 36
+    Factor      go to state 37
+    Term        go to state 38
+    Unary       go to state 39
+    Primary     go to state 40
+    Literal     go to state 41
+    Tuple       go to state 42
+    Array       go to state 43
+    Reference   go to state 44
 
 
 State 99
@@ -2182,9 +2181,16 @@ State 130
 
 State 131
 
-   68 ExpressionList: Expression COMMA ExpressionList •
+   26 Expression: Expression • AND Relation
+   27           | Expression • OR Relation
+   28           | Expression • XOR Relation
+   67 ExpressionList: ExpressionList COMMA Expression •
 
-    $default  reduce using rule 68 (ExpressionList)
+    AND  shift, and go to state 67
+    OR   shift, and go to state 68
+    XOR  shift, and go to state 69
+
+    $default  reduce using rule 67 (ExpressionList)
 
 
 State 132

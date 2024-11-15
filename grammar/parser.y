@@ -47,8 +47,8 @@
 
 
 %type<value> IDENT
-%type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment
-%type<node> Expression Relation Factor Term Unary Literal Primary Reference Body
+%type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array
+%type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList
 
 %%
 
@@ -190,7 +190,7 @@ Literal
     | TRUE { $$ = new ConstantNode(true); }
     | FALSE { $$ = new ConstantNode(false); }
     | Tuple
-    | Array
+    | Array { $$ = $1; }
     | EMPTY { $$ = new ConstantNode(); }
     ;
 
@@ -209,18 +209,28 @@ TupleElementList
     | /* empty */
 
 Array
-    : LBRACKET ExpressionList RBRACKET
+    : LBRACKET ExpressionList RBRACKET {
+        $$ = new ArrayNode((Elements*) $2);
+    }
     ;
 
 ExpressionList
-    : Expression
-    | Expression COMMA ExpressionList
-    | /* empty */
+    : ExpressionList COMMA Expression {
+        ((Elements*)$1)->Add((ExpressionNode*)$3);
+    }
+    | Expression {
+        Elements* e = new Elements();
+        e->Add((ExpressionNode*) $1);
+        $$ = e;
+    }
+    |  /* empty */ {
+        $$ = new Elements();
+    }
     ;
 
 Reference
     : IDENT { $$ = new LocationValue(std::string($1)); }
-    | Reference LBRACKET INTEGER RBRACKET
+    | Reference LBRACKET INTEGER RBRACKET { std::cout << "here" << std::endl; };
     | Reference DOT IDENT
     | Reference DOT INTEGER
     ;

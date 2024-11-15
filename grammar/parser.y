@@ -21,7 +21,7 @@
 %union {
     int iconst;       /* For integer constants */
     double fconst;     /* For real constants */
-    char* sconst;     /* For string literals */
+    std::string* sconst;     /* For string literals */
     char* ident;      /* For identifiers */
     Node* node;
     char* value;
@@ -186,7 +186,7 @@ Primary
 Literal
     : INTEGER { $$ = new ConstantNode(yylval.iconst); }
     | REAL { $$ = new ConstantNode(yylval.fconst); }
-    | STRING { $$ = new ConstantNode(std::string(yylval.sconst)); }
+    | STRING { $$ = new ConstantNode(yylval.sconst); }
     | TRUE { $$ = new ConstantNode(true); }
     | FALSE { $$ = new ConstantNode(false); }
     | Tuple

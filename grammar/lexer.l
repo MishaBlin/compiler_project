@@ -15,11 +15,6 @@ real       {integer}("."{integer})?("E"("+"|"-")?{integer})?
 
 %%
 "//".*           {} 
-\".*\"           { 
-                    yylval.sconst = strdup(yytext); 
-                    printf("STRING: %s\n", yytext);
-                    return STRING; 
-                 }
 "+"              { printf("PLUS: %s\n", yytext); return PLUS; }
 "-"              { printf("MINUS: %s\n", yytext); return MINUS; }
 "*"              { printf("MUL: %s\n", yytext); return MUL; }
@@ -73,6 +68,11 @@ real       {integer}("."{integer})?("E"("+"|"-")?{integer})?
                     yylval.ident = strdup(yytext);
                     printf("IDENTIFIER: %s\n", yytext);
                     return IDENT; 
+                 }
+\"([^\"]*)\"     { 
+                    yylval.sconst = new std::string(yytext, 1, strlen(yytext) - 2); 
+                    printf("STRING: %s\n", yytext);
+                    return STRING; 
                  }
 "("              { printf("LPAREN: %s\n", yytext); return LPAREN; }
 ")"              { printf("RPAREN: %s\n", yytext); return RPAREN; }

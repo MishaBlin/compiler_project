@@ -311,9 +311,9 @@ struct ConstantNode : public LiteralNode
 		this->value.dvalue = new double(value);
 	}
 
-	ConstantNode(const std::string &value) : ConstantNode()
+	ConstantNode(const std::string* value) : ConstantNode()
 	{
-		this->value.svalue = new std::string(value);
+		this->value.svalue = new std::string(*value);
 	}
 
 	ConstantNode(bool value) : ConstantNode()

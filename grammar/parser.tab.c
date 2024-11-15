@@ -1573,7 +1573,7 @@ yyreduce:
 
   case 55: /* Literal: STRING  */
 #line 189 "parser.y"
-             { (yyval.node) = new ConstantNode(std::string(yylval.sconst)); }
+             { (yyval.node) = new ConstantNode(yylval.sconst); }
 #line 1578 "parser.tab.c"
     break;
 

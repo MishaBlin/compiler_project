@@ -129,7 +129,7 @@ union YYSTYPE
 
     int iconst;       /* For integer constants */
     double fconst;     /* For real constants */
-    char* sconst;     /* For string literals */
+    std::string* sconst;     /* For string literals */
     char* ident;      /* For identifiers */
     Node* node;
     char* value;

@@ -18,12 +18,12 @@ struct TupleElements : public ExpressionNode
 {
     std::unordered_map<int, ExpressionNode *> indexes;
     std::unordered_map<std::string, ExpressionNode *> names;
+    std::unordered_map<int, std::string> idxToName;
 
     std::vector<ExpressionNode *> elements;
 
     TupleElements();
     void Add(TupleElement *element);
-    // void Execute(Context *context) override;
 };
 
 struct TupleNode : public ExpressionNode
@@ -31,6 +31,8 @@ struct TupleNode : public ExpressionNode
     TupleElements *elements;
 
     TupleNode(TupleElements *elements);
+
+    Value GetValue(Context *context) override;
 
     void Print(int indent) override;
 };

@@ -592,7 +592,7 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
        0,    56,    56,    61,    68,    69,    70,    71,    72,    73,
       77,    80,    84,    87,    90,    93,    97,   103,   106,   112,
@@ -600,9 +600,9 @@ static const yytype_uint8 yyrline[] =
      147,   148,   149,   150,   151,   152,   153,   157,   158,   159,
      163,   164,   165,   166,   170,   171,   172,   173,   174,   175,
      179,   180,   181,   185,   186,   187,   188,   189,   190,   191,
-     192,   196,   200,   201,   205,   206,   207,   210,   216,   219,
-     224,   230,   231,   232,   233,   237,   238,   239,   240,   241,
-     242,   243,   244,   247,   248,   249,   252,   253
+     192,   196,   202,   207,   215,   221,   225,   230,   236,   240,
+     245,   251,   252,   253,   254,   258,   259,   260,   261,   262,
+     263,   264,   265,   268,   269,   270,   273,   274
 };
 #endif
 
@@ -661,12 +661,12 @@ static const yytype_int16 yypact[] =
      221,   162,   185,   162,   -80,   105,   143,    -6,   -18,   -80,
      -80,   -80,   -80,   -80,    37,    12,    41,   108,   108,    57,
      162,    61,    68,    30,   162,    13,   -80,   -80,   -80,    69,
-     -12,   108,    44,    54,   108,    96,   -80,   162,   162,   162,
+     -12,   108,   -80,    75,   108,    96,   -80,   162,   162,   162,
      162,   162,   162,   162,   162,   162,   162,   162,   162,   162,
-     162,   184,   -80,   162,    63,    75,   108,    73,   -80,   -80,
-     -80,   108,    23,   -80,   162,   185,   -80,   -80,   162,    64,
+     162,   184,   -80,   162,    44,    56,   108,    71,   -80,   -80,
+     -80,   108,    23,   -80,   162,   -80,   185,   -80,   162,    64,
      143,   143,   143,    -6,    -6,    -6,    -6,    -6,    -6,   -18,
-     -18,   -80,   -80,   -80,    78,    90,   -80,   -80,   -80,   -80,
+     -18,   -80,   -80,   -80,    66,    90,   -80,   -80,   -80,   -80,
      -80,   -80,   -80,    83,    -5,    57,   -16,   -80,   -80,   108,
      -80,   108,   -80,   -80,   -80,   -80,   -80,   -80,   162,   -80,
      -80,   162,   -80,    92,    25,   104,   108,   -80,   -80,   -80,
@@ -687,7 +687,7 @@ static const yytype_int8 yydefact[] =
       71,    63,    64,     0,    69,     0,    25,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,    25,     0,    83,     0,    16,     0,    73,    74,
-      15,    14,     0,    51,     0,    66,    61,    67,     0,     0,
+      15,    14,     0,    51,     0,    61,     0,    67,     0,     0,
       27,    28,    29,    31,    32,    33,    34,    35,    36,    38,
       39,    41,    42,    43,     0,     0,    75,    76,    77,    78,
       79,    82,    45,     0,     0,    85,     0,    72,    52,    62,
@@ -701,7 +701,7 @@ static const yytype_int16 yypgoto[] =
 {
      -80,   -80,   139,   -80,    88,   -80,   -80,   -80,   -80,   -80,
      -80,   -79,    -4,    85,   107,   131,    53,   175,   -80,   -80,
-     -80,    48,   -80,    91,    -1,   -80,    21,   -80
+      47,   -80,   -80,    91,    -1,   -80,    21,   -80
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -725,10 +725,10 @@ static const yytype_uint8 yytable[] =
       64,    28,   138,   143,    29,    30,    83,    82,   128,    81,
       84,   145,    10,    98,    31,    87,    32,     3,    33,   150,
      148,    88,    89,     4,     5,    51,   132,     6,     7,   124,
-       8,     9,    34,    52,    95,    10,     3,    67,    68,    69,
-     129,    96,     4,     5,   131,     3,     6,     7,    19,     8,
-       9,     4,     5,   125,    93,     6,     7,     3,     8,     9,
-     126,   133,   127,     4,     5,   135,    66,     6,     7,    10,
+       8,     9,    34,    52,   125,    10,     3,    67,    68,    69,
+     129,   126,     4,     5,   131,     3,     6,     7,    19,     8,
+       9,     4,     5,   135,    93,     6,     7,     3,     8,     9,
+     127,   133,    95,     4,     5,    96,    66,     6,     7,    10,
        8,     9,    19,    67,    68,    69,    67,    68,    69,   136,
      137,   111,   112,   113,   144,    97,    98,   146,    10,   147,
       11,    90,    19,   130,    19,    92,   139,    10,     0,    19,
@@ -758,12 +758,12 @@ static const yytype_int16 yycheck[] =
        3,   140,    55,    40,    34,     4,    36,     3,    38,   148,
       45,     3,     4,     9,    10,    38,    12,    13,    14,    83,
       16,    17,    52,    46,    40,    55,     3,    18,    19,    20,
-      94,    37,     9,    10,    98,     3,    13,    14,    99,    16,
-      17,     9,    10,    40,    35,    13,    14,     3,    16,    17,
-      35,    47,    39,     9,    10,    37,    11,    13,    14,    55,
+      94,    35,     9,    10,    98,     3,    13,    14,    99,    16,
+      17,     9,    10,    37,    35,    13,    14,     3,    16,    17,
+      39,    47,    37,     9,    10,    40,    11,    13,    14,    55,
       16,    17,   123,    18,    19,    20,    18,    19,    20,    39,
       47,    78,    79,    80,   138,    39,    40,   141,    55,    47,
-       1,    53,   143,    95,   145,    54,   125,    55,    -1,   150,
+       1,    53,   143,    96,   145,    54,   125,    55,    -1,   150,
        3,    47,    67,    68,    69,    -1,     9,    10,    -1,    55,
       13,    14,    -1,    16,    17,     3,     4,     5,     6,     7,
        8,    28,    29,    30,    31,    32,    33,    70,    71,    72,
@@ -792,11 +792,11 @@ static const yytype_int8 yystos[] =
        3,    72,    80,    81,    72,    83,    11,    18,    19,    20,
       28,    29,    30,    31,    32,    33,    24,    25,    26,    27,
       59,    22,    45,    15,     3,    86,    72,     4,     3,     4,
-      64,    72,    83,    35,    23,    40,    37,    39,    40,    71,
+      64,    72,    83,    35,    23,    37,    40,    39,    40,    71,
       73,    73,    73,    74,    74,    74,    74,    74,    74,    75,
       75,    76,    76,    76,    36,    38,    48,    49,    50,    51,
       52,    55,    85,    71,    72,    40,    35,    39,    35,    72,
-      81,    72,    12,    47,    62,    37,    39,    47,    57,    86,
+      80,    72,    12,    47,    62,    37,    39,    47,    57,    86,
       22,    58,    87,    71,    72,    71,    72,    47,    45,    47,
       71,    47
 };
@@ -1587,66 +1587,129 @@ yyreduce:
 #line 1588 "parser.tab.c"
     break;
 
+  case 58: /* Literal: Tuple  */
+#line 190 "parser.y"
+            { (yyval.node) = (yyvsp[0].node); }
+#line 1594 "parser.tab.c"
+    break;
+
   case 59: /* Literal: Array  */
 #line 191 "parser.y"
             { (yyval.node) = (yyvsp[0].node); }
-#line 1594 "parser.tab.c"
+#line 1600 "parser.tab.c"
     break;
 
   case 60: /* Literal: EMPTY  */
 #line 192 "parser.y"
             { (yyval.node) = new ConstantNode(); }
-#line 1600 "parser.tab.c"
+#line 1606 "parser.tab.c"
+    break;
+
+  case 61: /* Tuple: LBRACE TupleElementList RBRACE  */
+#line 196 "parser.y"
+                                     {
+        (yyval.node) = new TupleNode((TupleElements*) (yyvsp[-1].node));
+    }
+#line 1614 "parser.tab.c"
+    break;
+
+  case 62: /* TupleElement: IDENT ASSIGN Expression  */
+#line 202 "parser.y"
+                              {
+        // std::cout<<"ident assig exp"<<std::endl;
+        (yyval.node) = new TupleElement((ExpressionNode*) (yyvsp[0].node), new std::string((yyvsp[-2].value)));
+        // std::cout<<"!!!!!!!!!"<<std::endl;
+    }
+#line 1624 "parser.tab.c"
+    break;
+
+  case 63: /* TupleElement: Expression  */
+#line 207 "parser.y"
+                 {
+        std::cout<<"no indent"<<std::endl;
+        (yyval.node) = new TupleElement((ExpressionNode*) (yyvsp[0].node));
+        std::cout<<"!!!"<<std::endl;
+    }
+#line 1634 "parser.tab.c"
+    break;
+
+  case 64: /* TupleElementList: TupleElement  */
+#line 215 "parser.y"
+                   {
+        TupleElements* elems = new TupleElements();
+        std::cout<<"add"<<std::endl;
+        elems->Add((TupleElement*) (yyvsp[0].node));
+        (yyval.node) = elems;
+    }
+#line 1645 "parser.tab.c"
+    break;
+
+  case 65: /* TupleElementList: TupleElementList COMMA TupleElement  */
+#line 221 "parser.y"
+                                          {
+        ((TupleElements*)(yyvsp[-2].node))->Add((TupleElement*)(yyvsp[0].node));
+        (yyval.node) = (yyvsp[-2].node);
+    }
+#line 1654 "parser.tab.c"
+    break;
+
+  case 66: /* TupleElementList: %empty  */
+#line 225 "parser.y"
+      {
+        (yyval.node) = new TupleElements();
+    }
+#line 1662 "parser.tab.c"
     break;
 
   case 67: /* Array: LBRACKET ExpressionList RBRACKET  */
-#line 210 "parser.y"
+#line 230 "parser.y"
                                        {
         (yyval.node) = new ArrayNode((Elements*) (yyvsp[-1].node));
     }
-#line 1608 "parser.tab.c"
+#line 1670 "parser.tab.c"
     break;
 
   case 68: /* ExpressionList: ExpressionList COMMA Expression  */
-#line 216 "parser.y"
+#line 236 "parser.y"
                                       {
         (yyvsp[-2].node)->Add((yyvsp[0].node));
+        (yyval.node) = (yyvsp[-2].node);
     }
-#line 1616 "parser.tab.c"
+#line 1679 "parser.tab.c"
     break;
 
   case 69: /* ExpressionList: Expression  */
-#line 219 "parser.y"
+#line 240 "parser.y"
                  {
         Elements* e = new Elements();
         e->Add((yyvsp[0].node));
         (yyval.node) = e;
     }
-#line 1626 "parser.tab.c"
+#line 1689 "parser.tab.c"
     break;
 
   case 70: /* ExpressionList: %empty  */
-#line 224 "parser.y"
+#line 245 "parser.y"
                    {
         (yyval.node) = new Elements();
     }
-#line 1634 "parser.tab.c"
+#line 1697 "parser.tab.c"
     break;
 
   case 71: /* Reference: IDENT  */
-#line 230 "parser.y"
+#line 251 "parser.y"
             { (yyval.node) = new LocationValue(std::string((yyvsp[0].value))); }
-#line 1640 "parser.tab.c"
+#line 1703 "parser.tab.c"
     break;
 
   case 72: /* Reference: Reference LBRACKET INTEGER RBRACKET  */
-#line 231 "parser.y"
+#line 252 "parser.y"
                                           { std::cout << "here" << std::endl; }
-#line 1646 "parser.tab.c"
+#line 1709 "parser.tab.c"
     break;
 
 
-#line 1650 "parser.tab.c"
+#line 1713 "parser.tab.c"
 
       default: break;
     }
@@ -1839,7 +1902,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 256 "parser.y"
+#line 277 "parser.y"
 
 
 void yyerror(const char *s)

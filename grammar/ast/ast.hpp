@@ -18,3 +18,4 @@
 #include "relation_operation.hpp"
 #include "value.hpp"
 #include "while_statement.hpp"
+#include "tuple_node.hpp"

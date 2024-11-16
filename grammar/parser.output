@@ -99,7 +99,7 @@ Grammar
    62             | Expression
 
    63 TupleElementList: TupleElement
-   64                 | TupleElement COMMA TupleElementList
+   64                 | TupleElementList COMMA TupleElement
    65                 | ε
 
    66 Array: LBRACKET ExpressionList RBRACKET
@@ -251,13 +251,13 @@ Nonterminals, with rules where they appear
     Literal <node> (78)
         on left: 52 53 54 55 56 57 58 59
         on right: 49
-    Tuple (79)
+    Tuple <node> (79)
         on left: 60
         on right: 57
-    TupleElement (80)
+    TupleElement <node> (80)
         on left: 61 62
         on right: 63 64
-    TupleElementList (81)
+    TupleElementList <node> (81)
         on left: 63 64 65
         on right: 60 64
     Array <node> (82)
@@ -1126,9 +1126,6 @@ State 61
 State 62
 
    63 TupleElementList: TupleElement •
-   64                 | TupleElement • COMMA TupleElementList
-
-    COMMA  shift, and go to state 95
 
     $default  reduce using rule 63 (TupleElementList)
 
@@ -1136,8 +1133,10 @@ State 62
 State 63
 
    60 Tuple: LBRACE TupleElementList • RBRACE
+   64 TupleElementList: TupleElementList • COMMA TupleElement
 
-    RBRACE  shift, and go to state 96
+    RBRACE  shift, and go to state 95
+    COMMA   shift, and go to state 96
 
 
 State 64
@@ -1736,7 +1735,14 @@ State 94
 
 State 95
 
-   64 TupleElementList: TupleElement COMMA • TupleElementList
+   60 Tuple: LBRACE TupleElementList RBRACE •
+
+    $default  reduce using rule 60 (Tuple)
+
+
+State 96
+
+   64 TupleElementList: TupleElementList COMMA • TupleElement
 
     IDENT     shift, and go to state 60
     INTEGER   shift, and go to state 23
@@ -1752,27 +1758,17 @@ State 95
     LBRACKET  shift, and go to state 33
     EMPTY     shift, and go to state 34
 
-    $default  reduce using rule 65 (TupleElementList)
-
-    Expression        go to state 61
-    Relation          go to state 36
-    Factor            go to state 37
-    Term              go to state 38
-    Unary             go to state 39
-    Primary           go to state 40
-    Literal           go to state 41
-    Tuple             go to state 42
-    TupleElement      go to state 62
-    TupleElementList  go to state 130
-    Array             go to state 43
-    Reference         go to state 44
-
-
-State 96
-
-   60 Tuple: LBRACE TupleElementList RBRACE •
-
-    $default  reduce using rule 60 (Tuple)
+    Expression    go to state 61
+    Relation      go to state 36
+    Factor        go to state 37
+    Term          go to state 38
+    Unary         go to state 39
+    Primary       go to state 40
+    Literal       go to state 41
+    Tuple         go to state 42
+    TupleElement  go to state 130
+    Array         go to state 43
+    Reference     go to state 44
 
 
 State 97
@@ -2174,7 +2170,7 @@ State 129
 
 State 130
 
-   64 TupleElementList: TupleElement COMMA TupleElementList •
+   64 TupleElementList: TupleElementList COMMA TupleElement •
 
     $default  reduce using rule 64 (TupleElementList)
 

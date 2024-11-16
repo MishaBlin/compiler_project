@@ -17,6 +17,7 @@ struct ArrayNode : public ExpressionNode {
   Elements *elements;
 
   ArrayNode(Elements *elements);
+  Value GetValue(Context *context) override;
 
   void Print(int indent) override;
 };

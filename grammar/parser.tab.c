@@ -600,9 +600,9 @@ static const yytype_int16 yyrline[] =
      147,   148,   149,   150,   151,   152,   153,   157,   158,   159,
      163,   164,   165,   166,   170,   171,   172,   173,   174,   175,
      179,   180,   181,   185,   186,   187,   188,   189,   190,   191,
-     192,   196,   202,   207,   215,   221,   225,   230,   236,   240,
-     245,   251,   252,   253,   254,   258,   259,   260,   261,   262,
-     263,   264,   265,   268,   269,   270,   273,   274
+     192,   196,   202,   207,   215,   220,   224,   229,   235,   239,
+     244,   250,   251,   252,   253,   257,   258,   259,   260,   261,
+     262,   263,   264,   267,   268,   269,   272,   273
 };
 #endif
 
@@ -1637,79 +1637,78 @@ yyreduce:
 #line 215 "parser.y"
                    {
         TupleElements* elems = new TupleElements();
-        std::cout<<"add"<<std::endl;
         elems->Add((TupleElement*) (yyvsp[0].node));
         (yyval.node) = elems;
     }
-#line 1645 "parser.tab.c"
+#line 1644 "parser.tab.c"
     break;
 
   case 65: /* TupleElementList: TupleElementList COMMA TupleElement  */
-#line 221 "parser.y"
+#line 220 "parser.y"
                                           {
         ((TupleElements*)(yyvsp[-2].node))->Add((TupleElement*)(yyvsp[0].node));
         (yyval.node) = (yyvsp[-2].node);
     }
-#line 1654 "parser.tab.c"
+#line 1653 "parser.tab.c"
     break;
 
   case 66: /* TupleElementList: %empty  */
-#line 225 "parser.y"
+#line 224 "parser.y"
       {
         (yyval.node) = new TupleElements();
     }
-#line 1662 "parser.tab.c"
+#line 1661 "parser.tab.c"
     break;
 
   case 67: /* Array: LBRACKET ExpressionList RBRACKET  */
-#line 230 "parser.y"
+#line 229 "parser.y"
                                        {
         (yyval.node) = new ArrayNode((Elements*) (yyvsp[-1].node));
     }
-#line 1670 "parser.tab.c"
+#line 1669 "parser.tab.c"
     break;
 
   case 68: /* ExpressionList: ExpressionList COMMA Expression  */
-#line 236 "parser.y"
+#line 235 "parser.y"
                                       {
         (yyvsp[-2].node)->Add((yyvsp[0].node));
         (yyval.node) = (yyvsp[-2].node);
     }
-#line 1679 "parser.tab.c"
+#line 1678 "parser.tab.c"
     break;
 
   case 69: /* ExpressionList: Expression  */
-#line 240 "parser.y"
+#line 239 "parser.y"
                  {
         Elements* e = new Elements();
         e->Add((yyvsp[0].node));
         (yyval.node) = e;
     }
-#line 1689 "parser.tab.c"
+#line 1688 "parser.tab.c"
     break;
 
   case 70: /* ExpressionList: %empty  */
-#line 245 "parser.y"
+#line 244 "parser.y"
                    {
         (yyval.node) = new Elements();
     }
-#line 1697 "parser.tab.c"
+#line 1696 "parser.tab.c"
     break;
 
   case 71: /* Reference: IDENT  */
-#line 251 "parser.y"
+#line 250 "parser.y"
             { (yyval.node) = new LocationValue(std::string((yyvsp[0].value))); }
-#line 1703 "parser.tab.c"
+#line 1702 "parser.tab.c"
     break;
 
   case 72: /* Reference: Reference LBRACKET INTEGER RBRACKET  */
-#line 252 "parser.y"
+#line 251 "parser.y"
                                           { std::cout << "here" << std::endl; }
-#line 1709 "parser.tab.c"
+#line 1708 "parser.tab.c"
     break;
 
 
-#line 1713 "parser.tab.c"
+#line 1712 "parser.tab.c"
 
       default: break;
     }
@@ -1902,7 +1901,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 277 "parser.y"
+#line 276 "parser.y"
 
 
 void yyerror(const char *s)

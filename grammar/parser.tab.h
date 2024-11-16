@@ -47,7 +47,7 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 30 "parser.y"
 
-    #include "ast.hpp"
+    #include "ast/ast.hpp"
 
 #line 53 "parser.tab.h"
 

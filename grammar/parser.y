@@ -6,7 +6,7 @@
     #include <vector>
     #include <iostream>
 
-    #include "ast.hpp"
+    #include "ast/ast.hpp"
 
     Node* root = nullptr;
 
@@ -28,7 +28,7 @@
 }
 
 %code requires {
-    #include "ast.hpp"
+    #include "ast/ast.hpp"
 }
 
 
@@ -85,12 +85,10 @@ FunctionDeclaration
 
 VariableDefinition
     : IDENT {
-        auto lvalue = new LocationValue(std::string($1));
-        $$ = new Declaration(lvalue); 
+        $$ = new Declaration(std::string($1)); 
     }
     | IDENT ASSIGN Expression { 
-        auto lvalue = new LocationValue(std::string($1), (ExpressionNode*)$3);
-        $$ = new Declaration(lvalue); 
+        $$ = new Declaration(std::string($1), (ExpressionNode*)$3);
     }
     | IDENT ASSIGN FunctionDeclaration {}
     ;
@@ -216,11 +214,11 @@ Array
 
 ExpressionList
     : ExpressionList COMMA Expression {
-        ((Elements*)$1)->Add((ExpressionNode*)$3);
+        $1->Add($3);
     }
     | Expression {
         Elements* e = new Elements();
-        e->Add((ExpressionNode*) $1);
+        e->Add($1);
         $$ = e;
     }
     |  /* empty */ {
@@ -263,6 +261,17 @@ void yyerror(const char *s)
   exit(1);
 }
 
+void PrintMessage(const std::string& message) {
+    for (int i = 0; i < 10; i++) {
+        std::cout << "==";
+    }
+    std::cout << ' ' << message << ' ';
+    for (int i = 0; i < 10; i++) {
+        std::cout << "==";
+    }
+    std::cout << std::endl;
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2) {
@@ -286,11 +295,20 @@ int main(int argc, char *argv[])
       if (!root) {
         std::cout << "Root is null" << std::endl;
       } else {
+        
         std::cout << "Root is not null" << std::endl;
+        PrintMessage("AST Tree");
         root->Print(0);
-        root->Execute();
+        
+        PrintMessage("Program Start");
+        root->Execute(new Context());
+        PrintMessage("Program Finish");
       }
-      fprintf(stderr, "Flag %d\n", flag);
+      if (flag == 0) {
+        std::cout << "Success :)" << std::endl;
+      } else {
+        std::cout << "Failure :(" << std::endl;
+      }
     }
     fclose(yyin);
 

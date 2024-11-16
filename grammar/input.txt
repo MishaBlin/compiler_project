@@ -1,18 +1,14 @@
 var x := 4
-var y := 5
-if x < y then
-    var x := true
-    if x then
-        var z := 5
-        y := "hello"
+var z := 10
+while x <= z loop
+    print "x = "
+    print x
+    for i in 0..x loop
+        print "i = "
+        print i
+        i := i + 2
+        print "z = "
         print z
     end
-    print x
+    x := x + 2
 end
-if false then
-    print "something"
-else
-    x := 10
-end
-print x
-print y

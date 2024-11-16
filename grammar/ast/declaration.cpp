@@ -11,7 +11,7 @@ Declaration::Declaration(const std::string& name, ExpressionNode* value) : Node(
 
 void Declaration::Execute(Context* context) {
   // std::cout << "Declaration::Execute" << std::endl;
-  context->locals[this->var_name] = this->var_value;
+  context->locals[this->var_name] = this->var_value->GetValue(context);
 }
 
 void Declaration::Print(int indent) {

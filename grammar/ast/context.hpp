@@ -8,7 +8,7 @@
 struct ExpressionNode;
 
 struct Context {
-  std::unordered_map<std::string, ExpressionNode*> locals;
+  std::unordered_map<std::string, Value> locals;
   Context* parent;
 
   Context(Context* parent = nullptr);

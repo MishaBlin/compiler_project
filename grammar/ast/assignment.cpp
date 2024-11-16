@@ -10,6 +10,7 @@ AssignmentNode::AssignmentNode(LocationValue *lvalue, ExpressionNode *new_value)
 }
 
 void AssignmentNode::Execute(Context *context) {
+  // std::cout << "AssignmentNode::Execute" << std::endl;
   this->lvalue->SetValue(context, this->new_value);
 }
 

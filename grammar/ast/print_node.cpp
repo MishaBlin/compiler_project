@@ -18,6 +18,9 @@ void PrintNode::Print(int indent) {
 
 void PrintNode::Execute(Context* context) {
   // std::cout << "PrintNode::Execute" << std::endl;
+  if (expression == nullptr) {
+    throw std::runtime_error("Nothing to print");
+  }
   auto ivalue = expression->GetValue(context).ivalue;
   auto dvalue = expression->GetValue(context).dvalue;
   auto svalue = expression->GetValue(context).svalue;

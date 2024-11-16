@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "constant_node.hpp"
 #include "constants.hpp"
 
 ForStatement::ForStatement(const std::string &it_name, ExpressionNode *begin, ExpressionNode *end, BlocksNode *body) : Node() {
@@ -12,18 +13,24 @@ ForStatement::ForStatement(const std::string &it_name, ExpressionNode *begin, Ex
 }
 
 void ForStatement::Execute(Context *context) {
-  // todo
-  // int start = *(this->begin->GetValue().ivalue);
-  // int end = *(this->end->GetValue().ivalue);
-  // auto for_context = new Context(context);
-  // for_context->locals[this->it_name] = this->begin->GetValue();
-  // for (int i = start; i <= end; i++) {
-  //   auto new_it = Value();
-  //   new_it.ivalue = new int(i);
-  //   for_context->locals[this->it_name] = new_it;
-  //   this->body->Execute(for_context);
-  // }
-  // delete for_context;
+  int start = *(this->begin->GetValue(context).ivalue);
+  int end = *(this->end->GetValue(context).ivalue);
+  auto for_context = new Context(context);
+  auto val = Value();
+  val.ivalue = new int(start);
+  for_context->locals[this->it_name] = val;
+  while (true) {
+    int curr = *(for_context->locals[this->it_name].ivalue);
+    if (curr > end) {
+      break;
+    }
+    this->body->Execute(for_context);
+    int updated = *(for_context->locals[this->it_name].ivalue) + 1;
+    auto up_val = Value();
+    up_val.ivalue = new int(updated);
+    for_context->locals[this->it_name] = up_val;
+  }
+  delete for_context;
 }
 
 void ForStatement::Print(int indent) {

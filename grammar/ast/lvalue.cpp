@@ -12,7 +12,7 @@ Value LocationValue::GetValue(Context* context) {
   auto it = context;
   while (it != nullptr) {
     if (it->locals.count(this->name)) {
-      return it->locals[this->name]->GetValue(it);
+      return it->locals[this->name];
     }
     it = it->parent;
   }
@@ -20,10 +20,11 @@ Value LocationValue::GetValue(Context* context) {
 }
 
 void LocationValue::SetValue(Context* context, ExpressionNode* new_value) {
+  // std::cout << "LocationValue::SetValue" << std::endl;
   auto it = context;
   while (it != nullptr) {
     if (it->locals.count(this->name)) {
-      it->locals[this->name] = new_value;
+      it->locals[this->name] = new_value->GetValue(context);
       return;
     }
     it = it->parent;

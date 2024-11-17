@@ -4,8 +4,6 @@
 
 #include "constants.hpp"
 
-void Elements::Execute(Context *context) {}
-
 ArrayNode::ArrayNode(Elements *elements) : ExpressionNode() {
   this->elements = elements;
 }
@@ -40,10 +38,6 @@ Value ArrayNode::GetValue(Context *context) {
   val->svalue = new std::string(result);
 
   return *val;
-}
-
-ArrayNode::ArrayNode(Elements *elements) : ExpressionNode() {
-  this->elements = elements;
 }
 
 void ArrayNode::Print(int indent) {

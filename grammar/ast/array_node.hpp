@@ -3,15 +3,7 @@
 #include <vector>
 
 #include "expression_node.hpp"
-
-struct Elements : public ExpressionNode {
-  std::vector<Node *> elements;
-
-  Elements();
-
-  void Add(Node *elem) override;
-  void Execute(Context *context) override;
-};
+#include "elements.hpp"
 
 struct ArrayNode : public ExpressionNode {
   Elements *elements;

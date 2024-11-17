@@ -10,7 +10,7 @@ struct Value {
 
   Value();
 
-  void Print();
+  void Print() const;
 
   Value operator+(const Value &other);
   Value operator*(const Value &other);

@@ -12,7 +12,7 @@ RelationOperation::RelationOperation(ExpressionNode *l, ExpressionNode *r, const
 
 void RelationOperation::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Operation " << this->operation << std::endl;
   this->left->Print(indent + 1);

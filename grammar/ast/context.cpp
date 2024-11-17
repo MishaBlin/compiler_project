@@ -20,11 +20,11 @@ void Context::PrintVars() {
 
   for (const auto& [key, _] : this->locals) {
     for (int i = 0; i < indent; i++) {
-      std::cout << constants::kSpace;
+      std::cout << constants::kIndent;
     }
     std::cout << "var: " << key << std::endl;
     for (int i = 0; i < indent; i++) {
-      std::cout << constants::kSpace;
+      std::cout << constants::kIndent;
     }
     //   std::cout << "value: ";
     //   value.Print();
@@ -34,16 +34,16 @@ void Context::PrintVars() {
   int step = 1;
   while (it != nullptr) {
     for (int i = 0; i < indent + step; i++) {
-      std::cout << constants::kSpace;
+      std::cout << constants::kIndent;
     }
     std::cout << step << " parent(s) up vars:" << std::endl;
     for (const auto& [key, _] : it->locals) {
       for (int i = 0; i < indent + step; i++) {
-        std::cout << constants::kSpace;
+        std::cout << constants::kIndent;
       }
       std::cout << "var: " << key << std::endl;
       for (int i = 0; i < indent + step; i++) {
-        std::cout << constants::kSpace;
+        std::cout << constants::kIndent;
       }
       //   std::cout << "value: ";
       //   value.Print();

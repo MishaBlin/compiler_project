@@ -16,11 +16,11 @@ void AssignmentNode::Execute(Context *context) {
 
 void AssignmentNode::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Assignment" << std::endl;
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Variable Name: " << this->lvalue->name << std::endl;
   this->new_value->Print(indent + 1);

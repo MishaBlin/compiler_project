@@ -1,1 +1,6 @@
 .vscode
+grammar/lex.yy.c
+grammar/parser
+grammar/parser.output
+grammar/parser.tab.c
+grammar/parser.tab.h

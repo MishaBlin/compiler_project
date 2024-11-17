@@ -4,6 +4,7 @@
 
 namespace constants {
 
-static constexpr std::string_view kSpace = "  ";
+static constexpr std::string_view kIndent = "  ";
+static constexpr char kSpace = ' ';
 
-}
+}  // namespace constants

@@ -8,7 +8,7 @@
 %}
 
 digit      [0-9]
-letter     [a-zA-Z]
+letter     [_a-zA-Z]
 identifier {letter}({letter}|{digit})*
 integer    {digit}+
 real       {integer}("."{integer})?("E"("+"|"-")?{integer})?

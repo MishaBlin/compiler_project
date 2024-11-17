@@ -35,24 +35,24 @@ void ForStatement::Execute(Context *context) {
 
 void ForStatement::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "ForStatement: Iterator: " << this->it_name << std::endl;
 
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "  Begin:" << std::endl;
   this->begin->Print(indent + 2);
 
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "  End:" << std::endl;
   this->end->Print(indent + 2);
 
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "  Body:" << std::endl;
   body->Print(indent + 2);

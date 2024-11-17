@@ -4,50 +4,71 @@
 
 #include "constants.hpp"
 
-PrintNode::PrintNode(ExpressionNode* exp) : Node() {
-  this->expression = exp;
+PrintNode::PrintNode(Elements* exp) : Node() {
+  this->expressions = exp;
 }
 
 void PrintNode::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Print" << std::endl;
-  expression->Print(indent + 1);
+  for (auto expression : this->expressions->elements) {
+    expression->Print(indent + 1);
+  }
 }
 
 void PrintNode::Execute(Context* context) {
   // std::cout << "PrintNode::Execute" << std::endl;
-  if (expression == nullptr) {
+  if (expressions == nullptr) {
     throw std::runtime_error("Nothing to print");
   }
-  auto ivalue = expression->GetValue(context).ivalue;
-  auto dvalue = expression->GetValue(context).dvalue;
-  auto svalue = expression->GetValue(context).svalue;
-  auto bvalue = expression->GetValue(context).bvalue;
-  if (ivalue) {
-    std::cout << *(ivalue) << std::endl;
-    return;
-  }
-  if (dvalue) {
-    std::cout << *(dvalue) << std::endl;
-    return;
-  }
-  if (svalue) {
-    std::cout << *(svalue) << std::endl;
-    return;
-  }
-  if (bvalue) {
-    if (*(bvalue)) {
-      std::cout << "true" << std::endl;
-    } else {
-      std::cout << "false" << std::endl;
+  int i = 0;
+  int size = expressions->elements.size();
+  for (auto expression : expressions->elements) {
+    i++;
+    // std::cout << "i = " << i << std::endl;
+    auto val = expression->GetValue(context);
+    if (val.ivalue) {
+      std::cout << *(val.ivalue);
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
     }
-    return;
+
+    if (val.dvalue) {
+      std::cout << *(val.dvalue);
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
+    }
+
+    if (val.svalue) {
+      std::cout << *(val.svalue);
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
+    }
+
+    if (val.bvalue) {
+      if (*(val.bvalue)) {
+        std::cout << "true";
+      } else {
+        std::cout << "false";
+      }
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
+    }
+
+    throw std::runtime_error("Not supported type to print");
   }
-  throw std::runtime_error("nothing to print");
+  std::cout << std::endl;
 }
 
 PrintNode::~PrintNode() {
-  delete expression;
 }

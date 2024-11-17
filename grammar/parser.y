@@ -49,6 +49,7 @@
 %type<value> IDENT
 %type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array
 %type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList
+%type<node> FunBody OptIdentifierList FunctionDeclaration FunctionCall
 
 %%
 
@@ -71,17 +72,20 @@ Statement
     | Loop
     | Return
     | Print { $$ = $1; }
+    | FunctionCall { $$ = $1; }
     ;
 
 Declaration
     : VAR VariableDefinition {
         $$ = $2;
     }
-    | FunctionDeclaration
     ;
 
 FunctionDeclaration
-    : FUNC LPAREN OptIdentifierList RPAREN FunBody;
+    : FUNC LPAREN OptIdentifierList RPAREN FunBody {
+        $$ = new FunctionNode((BlocksNode*)$5, (Parameters*)$3);
+    }
+    ;
 
 VariableDefinition
     : IDENT {
@@ -90,7 +94,9 @@ VariableDefinition
     | IDENT ASSIGN Expression { 
         $$ = new Declaration(std::string($1), (ExpressionNode*)$3);
     }
-    | IDENT ASSIGN FunctionDeclaration {}
+    | IDENT ASSIGN FunctionDeclaration {
+        $$ = new Declaration(std::string($1), (FunctionNode*)$3);
+    }
     ;
 
 Assignment
@@ -118,8 +124,12 @@ Loop
     ;
 
 Return
-    : RETURN
-    | RETURN Expression
+    : RETURN {
+        $$ = new ReturnNode();
+    }
+    | RETURN Expression {
+        $$ = new ReturnNode((ExpressionNode*)$2);
+    }
     ;
 
 Print
@@ -175,10 +185,15 @@ Unary
     | NOT Primary
     ;
 
+FunctionCall
+    : IDENT LPAREN ExpressionList RPAREN {
+        $$ = new FunctionCall(std::string($1), (Elements*)$3);
+    };
+
 Primary
     : Literal { $$ = $1; }
     | LPAREN Expression RPAREN { $$ = $2; }
-    | IDENT LPAREN ExpressionList RPAREN
+    | FunctionCall { $$ = $1; }
     ;
 
 Literal
@@ -214,11 +229,12 @@ Array
 
 ExpressionList
     : ExpressionList COMMA Expression {
-        $1->Add($3);
+        ((Elements*)$1)->Add((ExpressionNode*)$3);
+        $$ = $1;
     }
     | Expression {
         Elements* e = new Elements();
-        e->Add($1);
+        e->Add((ExpressionNode*)$1);
         $$ = e;
     }
     |  /* empty */ {
@@ -244,13 +260,26 @@ TypeIndicator
     | FUNC
     ;
 
-OptIdentifierList : IDENT
-                  | IDENT COMMA OptIdentifierList
-                  | /* empty */
-                  ;
+OptIdentifierList : IDENT {
+                    auto param = new Parameters();
+                    param->Add(std::string($1));
+                    $$ = param;
+                  }
+                  | OptIdentifierList COMMA IDENT{
+                    ((Parameters*)$1)->Add(std::string($3));
+                    $$ = $1;
+                  }
+                  | /* empty */ {
+                    $$ = new Parameters();
+                  }
+                  ; 
 
-FunBody : IS Body END
-        | IMPLICATION Expression
+FunBody : IS Body END {
+            $$ = $2;
+        }
+        | IMPLICATION Statement {
+            $$ = $2;
+        }
         ;
 
 %%
@@ -301,7 +330,7 @@ int main(int argc, char *argv[])
         root->Print(0);
         
         PrintMessage("Program Start");
-        root->Execute(new Context());
+        root->Execute(nullptr);
         PrintMessage("Program Finish");
       }
       if (flag == 0) {

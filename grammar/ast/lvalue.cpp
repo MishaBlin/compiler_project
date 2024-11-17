@@ -33,7 +33,7 @@ void LocationValue::SetValue(Context* context, ExpressionNode* new_value) {
 }
 
 void LocationValue::Print(int indent) {
-  for (int i = 0; i < indent + 1; i++) {
+  for (int i = 0; i < indent; i++) {
     std::cout << constants::kSpace;
   }
   std::cout << "Variable Name: " << this->name << std::endl;

@@ -30,22 +30,22 @@ void ConstantNode::Print(int indent) {
   }
   std::cout << "constant ";
   if (this->value.ivalue) {
-    std::cout << "integer " << *(this->value.ivalue) << std::endl;
+    std::cout << "integer: " << *(this->value.ivalue) << std::endl;
     return;
   }
 
   if (this->value.dvalue) {
-    std::cout << "double " << *(this->value.dvalue) << std::endl;
+    std::cout << "double: " << *(this->value.dvalue) << std::endl;
     return;
   }
 
   if (this->value.svalue) {
-    std::cout << "string " << *(this->value.svalue) << std::endl;
+    std::cout << "string: " << *(this->value.svalue) << std::endl;
     return;
   }
 
   if (this->value.bvalue) {
-    std::cout << "bool " << *(this->value.bvalue) << std::endl;
+    std::cout << "bool: " << *(this->value.bvalue) << std::endl;
     return;
   }
 }

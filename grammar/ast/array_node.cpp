@@ -4,15 +4,6 @@
 
 #include "constants.hpp"
 
-Elements::Elements() : ExpressionNode() {
-}
-
-void Elements::Add(Node *elem) {
-  this->elements.push_back(elem);
-}
-
-void Elements::Execute(Context *context) {}
-
 ArrayNode::ArrayNode(Elements *elements) : ExpressionNode() {
   this->elements = elements;
 }

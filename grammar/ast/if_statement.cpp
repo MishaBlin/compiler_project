@@ -33,23 +33,23 @@ void IfStatement::Print(int indent) {
   }
   std::cout << "IfStatement:" << std::endl;
 
-  for (int i = 0; i < indent; i++) {
+  for (int i = 0; i < indent + 1; i++) {
     std::cout << constants::kSpace;
   }
-  std::cout << "  Condition:" << std::endl;
+  std::cout << "Condition:" << std::endl;
   this->condition->Print(indent + 2);
 
-  for (int i = 0; i < indent; i++) {
+  for (int i = 0; i < indent + 1; i++) {
     std::cout << constants::kSpace;
   }
-  std::cout << "  Body:" << std::endl;
+  std::cout << "Body:" << std::endl;
   body->Print(indent + 2);
 
   if (elsebody) {
-    for (int i = 0; i < indent; i++) {
+    for (int i = 0; i < indent + 1; i++) {
       std::cout << constants::kSpace;
     }
-    std::cout << "  ElseBody:" << std::endl;
+    std::cout << "ElseBody:" << std::endl;
     elsebody->Print(indent + 2);
   }
 }

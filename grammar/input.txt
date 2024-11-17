@@ -1,14 +1,20 @@
-var x := 4
-var z := 10
-while x <= z loop
+var x := 14
+var b := func() is 
     print "x = "
     print x
-    for i in 0..x loop
-        print "i = "
-        print i
-        i := i + 2
-        print "z = "
-        print z
-    end
-    x := x + 2
 end
+var a := func(x, y) is
+    print "function a start"
+    print x
+    print y
+    if x < 10 then
+        print x + 15
+    end
+    x := 12
+    print x
+    print "function a end"
+end
+
+b()
+a(5, "hello")
+print x

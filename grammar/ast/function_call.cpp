@@ -13,6 +13,7 @@ FunctionCall::FunctionCall(const std::string& func_name, Elements* arguments) : 
 }
 
 Value FunctionCall::GetValue(Context* context) {
+  this->Execute(context);
   return (this->return_val != nullptr ? *(this->return_val) : Value());
 }
 
@@ -67,6 +68,9 @@ void FunctionCall::Execute(Context* context) {
   try {
     function->Execute(func_context);
   } catch (const Value& value) {
+    // std::cout << "got value from return ";
+    // value.Print();
     this->return_val = new Value(value);
+    // this->return_val->Print();
   }
 }

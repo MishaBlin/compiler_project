@@ -69,8 +69,8 @@ Statement
     : Declaration { $$ = $1; }
     | Assignment { $$ = $1; }
     | If { $$ = $1; }
-    | Loop
-    | Return
+    | Loop { $$ = $1; }
+    | Return { $$ = $1; }
     | Print { $$ = $1; }
     | FunctionCall { $$ = $1; }
     ;
@@ -282,7 +282,14 @@ FunBody
         $$ = $2;
     }
     | IMPLICATION Statement {
-        $$ = $2;
+        auto block = new BlocksNode();
+        block->Add($2);
+        $$ = block;
+    }
+    | IMPLICATION Statement SEMICOLON {
+        auto block = new BlocksNode();
+        block->Add($2);
+        $$ = block;
     }
     ;
 

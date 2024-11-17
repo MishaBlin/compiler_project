@@ -28,36 +28,33 @@ void PrintNode::Execute(Context* context) {
   for (auto expression : expressions->elements) {
     i++;
     // std::cout << "i = " << i << std::endl;
-    auto ivalue = expression->GetValue(context).ivalue;
-    auto dvalue = expression->GetValue(context).dvalue;
-    auto svalue = expression->GetValue(context).svalue;
-    auto bvalue = expression->GetValue(context).bvalue;
-    if (ivalue) {
-      std::cout << *(ivalue);
+    auto val = expression->GetValue(context);
+    if (val.ivalue) {
+      std::cout << *(val.ivalue);
       if (i != size) {
         std::cout << constants::kSpace;
       }
       continue;
     }
 
-    if (dvalue) {
-      std::cout << *(dvalue);
+    if (val.dvalue) {
+      std::cout << *(val.dvalue);
       if (i != size) {
         std::cout << constants::kSpace;
       }
       continue;
     }
 
-    if (svalue) {
-      std::cout << *(svalue);
+    if (val.svalue) {
+      std::cout << *(val.svalue);
       if (i != size) {
         std::cout << constants::kSpace;
       }
       continue;
     }
 
-    if (bvalue) {
-      if (*(bvalue)) {
+    if (val.bvalue) {
+      if (*(val.bvalue)) {
         std::cout << "true";
       } else {
         std::cout << "false";

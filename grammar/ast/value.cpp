@@ -90,7 +90,7 @@ Value Value::operator%(const Value &other) {
   throw std::logic_error("not supported");
 }
 
-void Value::Print() {
+void Value::Print() const {
   if (ivalue) {
     std::cout << *(ivalue) << std::endl;
     return;

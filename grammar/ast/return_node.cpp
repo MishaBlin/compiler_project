@@ -31,5 +31,6 @@ void ReturnNode::Print(int indent) {
 }
 
 void ReturnNode::Execute(Context* context) {
+//   std::cout << "ReturnNode::Execute" << std::endl;
   throw this->GetValue(context);
 }

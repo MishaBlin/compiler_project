@@ -1,19 +1,43 @@
-var x := 14
+var print_res := func(x) => print x
 
-var a := func(x, y) is
-    print "function a start"
-    var b := func() is 
-        print "x =", x
-    end
-    print y
-    if x < 10 then
-        print x + 15
-    end
-    b()
-    x := 12
-    print x
-    print "function a end"
+var square := func(x) is 
+    return x * x
 end
 
-a(5, "hello")
-print x
+var neg_sum := func(x, y) is
+    var negate := func(x) is
+        return 0 - x
+    end
+    return negate(x + y)
+end
+
+var find_sum := func(left, right) is
+    var res := 0
+    for i in left .. right loop
+        res := res + i
+    end
+    return res
+end
+
+
+var z := 2
+var res := neg_sum(z, square(neg_sum(3, 4 * 12)))
+print res
+print_res(find_sum(1, 10))
+
+var foo := func() is
+    z := z + 5
+end
+
+foo()
+
+var i := 0
+while i < 10 loop
+    if i < z then
+        print "i =", i, "is <= than z =", z
+    else
+        print "i =", i, "is > than z =", z
+    end
+    i := i + 1
+end
+print z

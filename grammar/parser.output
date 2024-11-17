@@ -1,6 +1,5 @@
 Terminals unused in grammar
 
-    SEMICOLON
     READINT
     READREAL
     READSTRING
@@ -11,6 +10,7 @@ Terminals unused in grammar
 
 State 8 conflicts: 1 shift/reduce
 State 9 conflicts: 1 shift/reduce
+State 149 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -131,6 +131,7 @@ Grammar
 
    86 FunBody: IS Body END
    87        | IMPLICATION Statement
+   88        | IMPLICATION Statement SEMICOLON
 
 
 Terminals, with rules where they appear
@@ -175,7 +176,7 @@ Terminals, with rules where they appear
     LBRACKET (293) 67 72 80
     RBRACKET (294) 67 72 80
     COMMA (295) 65 68 84
-    SEMICOLON (296)
+    SEMICOLON (296) 88
     READINT (297)
     READREAL (298)
     READSTRING (299)
@@ -192,7 +193,7 @@ Terminals, with rules where they appear
     FUNC (310) 11 82
     INVALID_CHARACTER (311)
     RANGE (312) 19
-    IMPLICATION (313) 87
+    IMPLICATION (313) 87 88
     MOD (314) 42
 
 
@@ -205,7 +206,7 @@ Nonterminals, with rules where they appear
         on right: 0 1
     Statement <node> (62)
         on left: 3 4 5 6 7 8 9
-        on right: 1 23 87
+        on right: 1 23 87 88
     Declaration <node> (63)
         on left: 10
         on right: 3
@@ -282,7 +283,7 @@ Nonterminals, with rules where they appear
         on left: 83 84 85
         on right: 11 84
     FunBody <node> (88)
-        on left: 86 87
+        on left: 86 87 88
         on right: 11
 
 
@@ -2363,6 +2364,7 @@ State 143
 State 144
 
    87 FunBody: IMPLICATION • Statement
+   88        | IMPLICATION • Statement SEMICOLON
 
     IDENT   shift, and go to state 3
     VAR     shift, and go to state 4
@@ -2450,8 +2452,12 @@ State 148
 State 149
 
    87 FunBody: IMPLICATION Statement •
+   88        | IMPLICATION Statement • SEMICOLON
 
-    $default  reduce using rule 87 (FunBody)
+    SEMICOLON  shift, and go to state 152
+
+    SEMICOLON  [reduce using rule 87 (FunBody)]
+    $default   reduce using rule 87 (FunBody)
 
 
 State 150
@@ -2466,3 +2472,10 @@ State 151
    86 FunBody: IS Body END •
 
     $default  reduce using rule 86 (FunBody)
+
+
+State 152
+
+   88 FunBody: IMPLICATION Statement SEMICOLON •
+
+    $default  reduce using rule 88 (FunBody)

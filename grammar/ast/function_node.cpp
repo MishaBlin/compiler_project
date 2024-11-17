@@ -23,11 +23,11 @@ void FunctionNode::Execute(Context* context) {
 
 void FunctionNode::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Parameters:" << std::endl;
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "[";
   for (int i = 0; i < parameters.size(); i++) {
@@ -38,7 +38,7 @@ void FunctionNode::Print(int indent) {
   }
   std::cout << "]\n";
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Body:" << std::endl;
   for (auto block : this->body->children) {

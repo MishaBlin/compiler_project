@@ -10,6 +10,7 @@ Terminals unused in grammar
 
 
 State 8 conflicts: 1 shift/reduce
+State 9 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -46,7 +47,7 @@ Grammar
    20 Return: RETURN
    21       | RETURN Expression
 
-   22 Print: PRINT Expression
+   22 Print: PRINT ExpressionList
 
    23 Body: Body Statement
    24     | ε
@@ -234,7 +235,7 @@ Nonterminals, with rules where they appear
         on right: 16 17 18 19 23 86
     Expression <node> (72)
         on left: 25 26 27 28
-        on right: 13 15 16 17 18 19 21 22 26 27 28 51 62 63 68 69
+        on right: 13 15 16 17 18 19 21 26 27 28 51 62 63 68 69
     Relation <node> (73)
         on left: 29 30 31 32 33 34 35
         on right: 25 26 27 28 30 31 32 33 34 35
@@ -270,7 +271,7 @@ Nonterminals, with rules where they appear
         on right: 59
     ExpressionList <node> (84)
         on left: 68 69 70
-        on right: 49 67 68
+        on right: 22 49 67 68
     Reference <node> (85)
         on left: 71 72 73 74
         on right: 15 43 44 72 73 74
@@ -452,7 +453,7 @@ State 8
 
 State 9
 
-   22 Print: PRINT • Expression
+   22 Print: PRINT • ExpressionList
 
     IDENT     shift, and go to state 3
     INTEGER   shift, and go to state 22
@@ -468,17 +469,21 @@ State 9
     LBRACKET  shift, and go to state 32
     EMPTY     shift, and go to state 33
 
-    Expression    go to state 48
-    Relation      go to state 35
-    Factor        go to state 36
-    Term          go to state 37
-    Unary         go to state 38
-    FunctionCall  go to state 39
-    Primary       go to state 40
-    Literal       go to state 41
-    Tuple         go to state 42
-    Array         go to state 43
-    Reference     go to state 44
+    IDENT     [reduce using rule 70 (ExpressionList)]
+    $default  reduce using rule 70 (ExpressionList)
+
+    Expression      go to state 48
+    Relation        go to state 35
+    Factor          go to state 36
+    Term            go to state 37
+    Unary           go to state 38
+    FunctionCall    go to state 39
+    Primary         go to state 40
+    Literal         go to state 41
+    Tuple           go to state 42
+    Array           go to state 43
+    ExpressionList  go to state 49
+    Reference       go to state 44
 
 
 State 10
@@ -544,9 +549,9 @@ State 18
    73          | Reference • DOT IDENT
    74          | Reference • DOT INTEGER
 
-    ASSIGN    shift, and go to state 49
-    LBRACKET  shift, and go to state 50
-    DOT       shift, and go to state 51
+    ASSIGN    shift, and go to state 50
+    LBRACKET  shift, and go to state 51
+    DOT       shift, and go to state 52
 
 
 State 19
@@ -569,7 +574,7 @@ State 19
 
     $default  reduce using rule 70 (ExpressionList)
 
-    Expression      go to state 52
+    Expression      go to state 48
     Relation        go to state 35
     Factor          go to state 36
     Term            go to state 37
@@ -788,7 +793,7 @@ State 32
 
     $default  reduce using rule 70 (ExpressionList)
 
-    Expression      go to state 52
+    Expression      go to state 48
     Relation        go to state 35
     Factor          go to state 36
     Term            go to state 37
@@ -920,8 +925,8 @@ State 44
    74          | Reference • DOT INTEGER
 
     IS        shift, and go to state 80
-    LBRACKET  shift, and go to state 50
-    DOT       shift, and go to state 51
+    LBRACKET  shift, and go to state 51
+    DOT       shift, and go to state 52
 
     $default  reduce using rule 43 (Unary)
 
@@ -962,19 +967,29 @@ State 47
 
 State 48
 
-   22 Print: PRINT Expression •
    26 Expression: Expression • AND Relation
    27           | Expression • OR Relation
    28           | Expression • XOR Relation
+   69 ExpressionList: Expression •
 
     AND  shift, and go to state 66
     OR   shift, and go to state 67
     XOR  shift, and go to state 68
 
-    $default  reduce using rule 22 (Print)
+    $default  reduce using rule 69 (ExpressionList)
 
 
 State 49
+
+   22 Print: PRINT ExpressionList •
+   68 ExpressionList: ExpressionList • COMMA Expression
+
+    COMMA  shift, and go to state 83
+
+    $default  reduce using rule 22 (Print)
+
+
+State 50
 
    15 Assignment: Reference ASSIGN • Expression
 
@@ -992,7 +1007,7 @@ State 49
     LBRACKET  shift, and go to state 32
     EMPTY     shift, and go to state 33
 
-    Expression    go to state 83
+    Expression    go to state 84
     Relation      go to state 35
     Factor        go to state 36
     Term          go to state 37
@@ -1005,34 +1020,20 @@ State 49
     Reference     go to state 44
 
 
-State 50
+State 51
 
    72 Reference: Reference LBRACKET • INTEGER RBRACKET
 
-    INTEGER  shift, and go to state 84
-
-
-State 51
-
-   73 Reference: Reference DOT • IDENT
-   74          | Reference DOT • INTEGER
-
-    IDENT    shift, and go to state 85
-    INTEGER  shift, and go to state 86
+    INTEGER  shift, and go to state 85
 
 
 State 52
 
-   26 Expression: Expression • AND Relation
-   27           | Expression • OR Relation
-   28           | Expression • XOR Relation
-   69 ExpressionList: Expression •
+   73 Reference: Reference DOT • IDENT
+   74          | Reference DOT • INTEGER
 
-    AND  shift, and go to state 66
-    OR   shift, and go to state 67
-    XOR  shift, and go to state 68
-
-    $default  reduce using rule 69 (ExpressionList)
+    IDENT    shift, and go to state 86
+    INTEGER  shift, and go to state 87
 
 
 State 53
@@ -1040,8 +1041,8 @@ State 53
    49 FunctionCall: IDENT LPAREN ExpressionList • RPAREN
    68 ExpressionList: ExpressionList • COMMA Expression
 
-    RPAREN  shift, and go to state 87
-    COMMA   shift, and go to state 88
+    RPAREN  shift, and go to state 88
+    COMMA   shift, and go to state 83
 
 
 State 54
@@ -1168,7 +1169,7 @@ State 64
    68 ExpressionList: ExpressionList • COMMA Expression
 
     RBRACKET  shift, and go to state 96
-    COMMA     shift, and go to state 88
+    COMMA     shift, and go to state 83
 
 
 State 65
@@ -1640,48 +1641,6 @@ State 82
 
 State 83
 
-   15 Assignment: Reference ASSIGN Expression •
-   26 Expression: Expression • AND Relation
-   27           | Expression • OR Relation
-   28           | Expression • XOR Relation
-
-    AND  shift, and go to state 66
-    OR   shift, and go to state 67
-    XOR  shift, and go to state 68
-
-    $default  reduce using rule 15 (Assignment)
-
-
-State 84
-
-   72 Reference: Reference LBRACKET INTEGER • RBRACKET
-
-    RBRACKET  shift, and go to state 123
-
-
-State 85
-
-   73 Reference: Reference DOT IDENT •
-
-    $default  reduce using rule 73 (Reference)
-
-
-State 86
-
-   74 Reference: Reference DOT INTEGER •
-
-    $default  reduce using rule 74 (Reference)
-
-
-State 87
-
-   49 FunctionCall: IDENT LPAREN ExpressionList RPAREN •
-
-    $default  reduce using rule 49 (FunctionCall)
-
-
-State 88
-
    68 ExpressionList: ExpressionList COMMA • Expression
 
     IDENT     shift, and go to state 3
@@ -1698,7 +1657,7 @@ State 88
     LBRACKET  shift, and go to state 32
     EMPTY     shift, and go to state 33
 
-    Expression    go to state 124
+    Expression    go to state 123
     Relation      go to state 35
     Factor        go to state 36
     Term          go to state 37
@@ -1709,6 +1668,48 @@ State 88
     Tuple         go to state 42
     Array         go to state 43
     Reference     go to state 44
+
+
+State 84
+
+   15 Assignment: Reference ASSIGN Expression •
+   26 Expression: Expression • AND Relation
+   27           | Expression • OR Relation
+   28           | Expression • XOR Relation
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    XOR  shift, and go to state 68
+
+    $default  reduce using rule 15 (Assignment)
+
+
+State 85
+
+   72 Reference: Reference LBRACKET INTEGER • RBRACKET
+
+    RBRACKET  shift, and go to state 124
+
+
+State 86
+
+   73 Reference: Reference DOT IDENT •
+
+    $default  reduce using rule 73 (Reference)
+
+
+State 87
+
+   74 Reference: Reference DOT INTEGER •
+
+    $default  reduce using rule 74 (Reference)
+
+
+State 88
+
+   49 FunctionCall: IDENT LPAREN ExpressionList RPAREN •
+
+    $default  reduce using rule 49 (FunctionCall)
 
 
 State 89
@@ -2137,13 +2138,6 @@ State 122
 
 State 123
 
-   72 Reference: Reference LBRACKET INTEGER RBRACKET •
-
-    $default  reduce using rule 72 (Reference)
-
-
-State 124
-
    26 Expression: Expression • AND Relation
    27           | Expression • OR Relation
    28           | Expression • XOR Relation
@@ -2154,6 +2148,13 @@ State 124
     XOR  shift, and go to state 68
 
     $default  reduce using rule 68 (ExpressionList)
+
+
+State 124
+
+   72 Reference: Reference LBRACKET INTEGER RBRACKET •
+
+    $default  reduce using rule 72 (Reference)
 
 
 State 125

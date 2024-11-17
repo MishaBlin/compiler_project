@@ -18,18 +18,21 @@ Value FunctionCall::GetValue(Context* context) {
 
 void FunctionCall::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Function call:" << std::endl;
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Function: " << this->function_name << std::endl;
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Function args: " << std::endl;
   if (this->args->elements.empty()) {
+    for (int i = 0; i < indent + 2; i++) {
+      std::cout << constants::kIndent;
+    }
     std::cout << "<empty>" << std::endl;
     return;
   }
@@ -60,7 +63,7 @@ void FunctionCall::Execute(Context* context) {
     // std::cout << "val: ";
     // func_context->locals[func_param].Print();
   }
-//   func_context->PrintVars();
+  //   func_context->PrintVars();
   try {
     function->Execute(func_context);
   } catch (const Value& value) {

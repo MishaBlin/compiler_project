@@ -23,7 +23,7 @@ void ProgramNode::Execute(Context* context) {
 void ProgramNode::Print(int indent) {
   std::cout << "Program" << std::endl;
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   for (const auto child : children) {
     child->Print(indent + 1);

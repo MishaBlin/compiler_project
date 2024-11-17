@@ -29,25 +29,25 @@ void IfStatement::Execute(Context *context) {
 
 void IfStatement::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "IfStatement:" << std::endl;
 
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Condition:" << std::endl;
   this->condition->Print(indent + 2);
 
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Body:" << std::endl;
   body->Print(indent + 2);
 
   if (elsebody) {
     for (int i = 0; i < indent + 1; i++) {
-      std::cout << constants::kSpace;
+      std::cout << constants::kIndent;
     }
     std::cout << "ElseBody:" << std::endl;
     elsebody->Print(indent + 2);

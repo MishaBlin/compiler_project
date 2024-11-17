@@ -1,11 +1,11 @@
 #pragma once
 
-#include "expression_node.hpp"
+#include "elements.hpp"
 
 struct PrintNode : public Node {
-  ExpressionNode *expression;
+  Elements *expressions;
 
-  PrintNode(ExpressionNode *exp);
+  PrintNode(Elements *exp);
 
   void Print(int indent) override;
   void Execute(Context *context) override;

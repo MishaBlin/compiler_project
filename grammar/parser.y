@@ -133,7 +133,9 @@ Return
     ;
 
 Print
-    : PRINT Expression { $$ = new PrintNode((ExpressionNode*)$2); }
+    : PRINT ExpressionList { 
+        $$ = new PrintNode((Elements*)$2); 
+    }
     ;
 
 Body
@@ -260,27 +262,29 @@ TypeIndicator
     | FUNC
     ;
 
-OptIdentifierList : IDENT {
-                    auto param = new Parameters();
-                    param->Add(std::string($1));
-                    $$ = param;
-                  }
-                  | OptIdentifierList COMMA IDENT{
-                    ((Parameters*)$1)->Add(std::string($3));
-                    $$ = $1;
-                  }
-                  | /* empty */ {
-                    $$ = new Parameters();
-                  }
-                  ; 
+OptIdentifierList 
+    : IDENT {
+        auto param = new Parameters();
+        param->Add(std::string($1));
+        $$ = param;
+    }
+        | OptIdentifierList COMMA IDENT{
+        ((Parameters*)$1)->Add(std::string($3));
+        $$ = $1;
+    }
+    | /* empty */ {
+        $$ = new Parameters();
+    }
+    ; 
 
-FunBody : IS Body END {
-            $$ = $2;
-        }
-        | IMPLICATION Statement {
-            $$ = $2;
-        }
-        ;
+FunBody 
+    : IS Body END {
+        $$ = $2;
+    }
+    | IMPLICATION Statement {
+        $$ = $2;
+    }
+    ;
 
 %%
 

@@ -1,20 +1,19 @@
 var x := 14
-var b := func() is 
-    print "x = "
-    print x
-end
+
 var a := func(x, y) is
     print "function a start"
-    print x
+    var b := func() is 
+        print "x =", x
+    end
     print y
     if x < 10 then
         print x + 15
     end
+    b()
     x := 12
     print x
     print "function a end"
 end
 
-b()
 a(5, "hello")
 print x

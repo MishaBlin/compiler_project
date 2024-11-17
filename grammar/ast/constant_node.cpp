@@ -16,7 +16,7 @@ ConstantNode::ConstantNode(double value) : ConstantNode() {
   this->value.dvalue = new double(value);
 }
 
-ConstantNode::ConstantNode(const std::string *value) : ConstantNode() {
+ConstantNode::ConstantNode(const std::string* value) : ConstantNode() {
   this->value.svalue = new std::string(*value);
 }
 
@@ -26,7 +26,7 @@ ConstantNode::ConstantNode(bool value) : ConstantNode() {
 
 void ConstantNode::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "constant ";
   if (this->value.ivalue) {

@@ -26,11 +26,11 @@ void Declaration::Execute(Context* context) {
 
 void Declaration::Print(int indent) {
   for (int i = 0; i < indent; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Variable Declaration" << std::endl;
   for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kSpace;
+    std::cout << constants::kIndent;
   }
   std::cout << "Variable Name: " << this->var_name << std::endl;
   if (this->func_def) {

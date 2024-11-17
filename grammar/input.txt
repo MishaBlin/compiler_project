@@ -1,3 +1,7 @@
+var t := {5, a:=4, b:={g:=7, 1 + 2 * 5 - 3}, 5,6}
+
+print t
+
 var print_res := func(x) => print x
 
 var square := func(x) is 

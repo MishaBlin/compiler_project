@@ -47,8 +47,8 @@
 
 
 %type<value> IDENT
-%type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array
-%type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList
+%type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array Tuple
+%type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList TupleElementList TupleElement
 %type<node> FunBody OptIdentifierList FunctionDeclaration FunctionCall
 
 %%
@@ -204,24 +204,43 @@ Literal
     | STRING { $$ = new ConstantNode(yylval.sconst); }
     | TRUE { $$ = new ConstantNode(true); }
     | FALSE { $$ = new ConstantNode(false); }
-    | Tuple
+    | Tuple { $$ = $1; }
     | Array { $$ = $1; }
     | EMPTY { $$ = new ConstantNode(); }
     ;
 
 Tuple
-    : LBRACE TupleElementList RBRACE
+    : LBRACE TupleElementList RBRACE {
+        $$ = new TupleNode((TupleElements*) $2);
+    }
     ;
 
 TupleElement
-    : IDENT ASSIGN Expression
-    | Expression
+    : IDENT ASSIGN Expression {
+        // std::cout<<"ident assig exp"<<std::endl;
+        $$ = new TupleElement((ExpressionNode*) $3, new std::string($1));
+        // std::cout<<"!!!!!!!!!"<<std::endl;
+    }
+    | Expression {
+        std::cout<<"no indent"<<std::endl;
+        $$ = new TupleElement((ExpressionNode*) $1);
+        std::cout<<"!!!"<<std::endl;
+    }
     ;
 
 TupleElementList
-    : TupleElement
-    | TupleElement COMMA TupleElementList
-    | /* empty */
+    : TupleElement {
+        TupleElements* elems = new TupleElements();
+        elems->Add((TupleElement*) $1);
+        $$ = elems;
+    }
+    | TupleElementList COMMA TupleElement {
+        ((TupleElements*)$1)->Add((TupleElement*)$3);
+        $$ = $1;
+    }
+    | {
+        $$ = new TupleElements();
+    }
 
 Array
     : LBRACKET ExpressionList RBRACKET {

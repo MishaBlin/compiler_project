@@ -43,9 +43,10 @@ enum yytokentype {
   BOOL,         // "bool"
   STRING,       // "string"
 
-  INT_LITERAL,   // {integer} literals
-  REAL_LITERAL,  // {real} literals
-  IDENTIFIER,    // {identifier}
+  INT_LITERAL,    // {integer} literals
+  REAL_LITERAL,   // {real} literals
+  STRING_LITERAL, // {string} literals
+  IDENTIFIER,     // {identifier}
 
   LEFT_BR,      // "("
   RIGHT_BR,     // ")"
@@ -142,6 +143,8 @@ const char* tokenToString(enum yytokentype token) {
       return "INT_LITERAL";
     case REAL_LITERAL:
       return "REAL_LITERAL";
+    case STRING_LITERAL:
+      return "STRING_LITERAL";
     case IDENTIFIER:
       return "IDENTIFIER";
     case LEFT_BR:

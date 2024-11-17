@@ -268,7 +268,7 @@ OptIdentifierList
         param->Add(std::string($1));
         $$ = param;
     }
-        | OptIdentifierList COMMA IDENT{
+    | OptIdentifierList COMMA IDENT{
         ((Parameters*)$1)->Add(std::string($3));
         $$ = $1;
     }

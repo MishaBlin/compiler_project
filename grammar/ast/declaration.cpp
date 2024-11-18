@@ -34,9 +34,9 @@ void Declaration::Print(int indent) {
   }
   std::cout << "Variable Name: " << this->var_name << std::endl;
   if (this->func_def) {
-    this->func_def->Print(indent + 1);
+    this->func_def->Print(indent + 2);
   }
   if (this->var_value) {
-    this->var_value->Print(indent + 1);
+    this->var_value->Print(indent + 2);
   }
 }

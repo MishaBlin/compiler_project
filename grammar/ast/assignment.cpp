@@ -19,9 +19,6 @@ void AssignmentNode::Print(int indent) {
     std::cout << constants::kIndent;
   }
   std::cout << "Assignment" << std::endl;
-  for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kIndent;
-  }
   this->ref->Print(indent + 1);
   this->new_value->Print(indent + 1);
 }

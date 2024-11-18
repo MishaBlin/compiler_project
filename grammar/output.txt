@@ -1,0 +1,566 @@
+VAR: var
+IDENTIFIER: t
+ASSIGN: :=
+LBRACE: {
+INTEGER: 5
+COMMA: ,
+IDENTIFIER: a
+ASSIGN: :=
+INTEGER: 4
+COMMA: ,
+IDENTIFIER: b
+ASSIGN: :=
+LBRACE: {
+IDENTIFIER: g
+ASSIGN: :=
+INTEGER: 7
+COMMA: ,
+INTEGER: 1
+PLUS: +
+INTEGER: 2
+MUL: *
+INTEGER: 5
+MINUS: -
+INTEGER: 3
+RBRACE: }
+COMMA: ,
+INTEGER: 5
+COMMA: ,
+INTEGER: 6
+RBRACE: }
+PRINT: print
+IDENTIFIER: t
+VAR: var
+IDENTIFIER: print_res
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+IDENTIFIER: x
+RPAREN: )
+IMPLICATION: =>
+PRINT: print
+IDENTIFIER: x
+VAR: var
+IDENTIFIER: square
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+IDENTIFIER: x
+RPAREN: )
+IS: is
+RETURN: return
+IDENTIFIER: x
+MUL: *
+IDENTIFIER: x
+END: end
+VAR: var
+IDENTIFIER: neg_sum
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+IDENTIFIER: x
+COMMA: ,
+IDENTIFIER: y
+RPAREN: )
+IS: is
+VAR: var
+IDENTIFIER: negate
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+IDENTIFIER: x
+RPAREN: )
+IS: is
+RETURN: return
+INTEGER: 0
+MINUS: -
+IDENTIFIER: x
+END: end
+RETURN: return
+IDENTIFIER: negate
+LPAREN: (
+IDENTIFIER: x
+PLUS: +
+IDENTIFIER: y
+RPAREN: )
+END: end
+VAR: var
+IDENTIFIER: find_sum
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+IDENTIFIER: left
+COMMA: ,
+IDENTIFIER: right
+RPAREN: )
+IS: is
+VAR: var
+IDENTIFIER: res
+ASSIGN: :=
+INTEGER: 0
+FOR: for
+IDENTIFIER: i
+IN: in
+IDENTIFIER: left
+RANGE: ..
+IDENTIFIER: right
+LOOP: loop
+IDENTIFIER: res
+ASSIGN: :=
+IDENTIFIER: res
+PLUS: +
+IDENTIFIER: i
+END: end
+RETURN: return
+IDENTIFIER: res
+END: end
+VAR: var
+IDENTIFIER: z
+ASSIGN: :=
+INTEGER: 2
+VAR: var
+IDENTIFIER: res
+ASSIGN: :=
+IDENTIFIER: neg_sum
+LPAREN: (
+IDENTIFIER: z
+COMMA: ,
+IDENTIFIER: square
+LPAREN: (
+IDENTIFIER: neg_sum
+LPAREN: (
+INTEGER: 3
+COMMA: ,
+INTEGER: 4
+MUL: *
+INTEGER: 12
+RPAREN: )
+RPAREN: )
+RPAREN: )
+PRINT: print
+IDENTIFIER: res
+IDENTIFIER: print_res
+LPAREN: (
+IDENTIFIER: find_sum
+LPAREN: (
+INTEGER: 1
+COMMA: ,
+INTEGER: 10
+RPAREN: )
+RPAREN: )
+VAR: var
+IDENTIFIER: foo
+ASSIGN: :=
+FUNC: func
+LPAREN: (
+RPAREN: )
+IS: is
+IDENTIFIER: z
+ASSIGN: :=
+IDENTIFIER: z
+PLUS: +
+INTEGER: 5
+END: end
+IDENTIFIER: foo
+LPAREN: (
+RPAREN: )
+VAR: var
+IDENTIFIER: i
+ASSIGN: :=
+INTEGER: 0
+WHILE: while
+IDENTIFIER: i
+LT: <
+INTEGER: 10
+LOOP: loop
+IF: if
+IDENTIFIER: i
+LT: <
+IDENTIFIER: z
+THEN: then
+PRINT: print
+STRING: "i ="
+COMMA: ,
+IDENTIFIER: i
+COMMA: ,
+STRING: "is <= than z ="
+COMMA: ,
+IDENTIFIER: z
+ELSE: else
+PRINT: print
+STRING: "i ="
+COMMA: ,
+IDENTIFIER: i
+COMMA: ,
+STRING: "is > than z ="
+COMMA: ,
+IDENTIFIER: z
+END: end
+IDENTIFIER: i
+ASSIGN: :=
+IDENTIFIER: i
+PLUS: +
+INTEGER: 1
+END: end
+PRINT: print
+IDENTIFIER: z
+VAR: var
+IDENTIFIER: arr
+ASSIGN: :=
+LBRACKET: [
+INTEGER: 2
+COMMA: ,
+INTEGER: 3
+COMMA: ,
+INTEGER: 4
+COMMA: ,
+INTEGER: 5
+RBRACKET: ]
+PRINT: print
+STRING: "before:"
+COMMA: ,
+IDENTIFIER: arr
+IDENTIFIER: arr
+LBRACKET: [
+INTEGER: 3
+RBRACKET: ]
+Got here
+0
+3
+Finish here
+ASSIGN: :=
+LBRACE: {
+INTEGER: 1
+COMMA: ,
+INTEGER: 2
+COMMA: ,
+IDENTIFIER: b
+ASSIGN: :=
+LBRACKET: [
+STRING: "hello"
+COMMA: ,
+LBRACKET: [
+LBRACE: {
+STRING: "world"
+COMMA: ,
+IDENTIFIER: earth
+ASSIGN: :=
+STRING: "earth"
+RBRACE: }
+RBRACKET: ]
+RBRACKET: ]
+COMMA: ,
+INTEGER: 4
+RBRACE: }
+PRINT: print
+STRING: "after:"
+COMMA: ,
+IDENTIFIER: arr
+PRINT: print
+STRING: "elem:"
+COMMA: ,
+IDENTIFIER: arr
+LBRACKET: [
+INTEGER: 3
+RBRACKET: ]
+Got here
+0
+3
+Finish here
+DOT: .
+IDENTIFIER: b
+LBRACKET: [
+INTEGER: 1
+RBRACKET: ]
+Got here
+0
+1
+Finish here
+LBRACKET: [
+INTEGER: 0
+RBRACKET: ]
+Got here
+0
+0
+Finish here
+DOT: .
+IDENTIFIER: earth
+Root is not null
+==================== AST Tree ====================
+Program
+  Variable Declaration
+    Variable Name: t
+      Tuple. Elements: 
+        idx: 1
+        member: <nil>
+        value: 
+          constant integer: 5
+        idx: 2
+        member: a
+        value: 
+          constant integer: 4
+        idx: 3
+        member: b
+        value: 
+          Tuple. Elements: 
+            idx: 1
+            member: g
+            value: 
+              constant integer: 7
+            idx: 2
+            member: <nil>
+            value: 
+              Operation -
+                Operation +
+                  constant integer: 1
+                  Operation *
+                    constant integer: 2
+                    constant integer: 5
+                constant integer: 3
+        idx: 4
+        member: <nil>
+        value: 
+          constant integer: 5
+        idx: 5
+        member: <nil>
+        value: 
+          constant integer: 6
+  Print
+    Reference: 
+      type: lvalue, name: t
+  Variable Declaration
+    Variable Name: print_res
+      Parameters:
+        [x]
+      Body:
+        Print
+          Reference: 
+            type: lvalue, name: x
+  Variable Declaration
+    Variable Name: square
+      Parameters:
+        [x]
+      Body:
+        return: 
+          Operation *
+            Reference: 
+              type: lvalue, name: x
+            Reference: 
+              type: lvalue, name: x
+  Variable Declaration
+    Variable Name: neg_sum
+      Parameters:
+        [x, y]
+      Body:
+        Variable Declaration
+          Variable Name: negate
+            Parameters:
+              [x]
+            Body:
+              return: 
+                Operation -
+                  constant integer: 0
+                  Reference: 
+                    type: lvalue, name: x
+        return: 
+          Function call:
+            Function: negate
+            Function args: 
+              Operation +
+                Reference: 
+                  type: lvalue, name: x
+                Reference: 
+                  type: lvalue, name: y
+  Variable Declaration
+    Variable Name: find_sum
+      Parameters:
+        [left, right]
+      Body:
+        Variable Declaration
+          Variable Name: res
+            constant integer: 0
+        ForStatement: Iterator: i
+          Begin:
+            Reference: 
+              type: lvalue, name: left
+          End:
+            Reference: 
+              type: lvalue, name: right
+          Body:
+              Assignment
+                Reference: 
+                  type: lvalue, name: res
+                Operation +
+                  Reference: 
+                    type: lvalue, name: res
+                  Reference: 
+                    type: lvalue, name: i
+        return: 
+          Reference: 
+            type: lvalue, name: res
+  Variable Declaration
+    Variable Name: z
+      constant integer: 2
+  Variable Declaration
+    Variable Name: res
+      Function call:
+        Function: neg_sum
+        Function args: 
+          Reference: 
+            type: lvalue, name: z
+          Function call:
+            Function: square
+            Function args: 
+              Function call:
+                Function: neg_sum
+                Function args: 
+                  constant integer: 3
+                  Operation *
+                    constant integer: 4
+                    constant integer: 12
+  Print
+    Reference: 
+      type: lvalue, name: res
+  Function call:
+    Function: print_res
+    Function args: 
+      Function call:
+        Function: find_sum
+        Function args: 
+          constant integer: 1
+          constant integer: 10
+  Variable Declaration
+    Variable Name: foo
+      Parameters:
+        []
+      Body:
+        Assignment
+          Reference: 
+            type: lvalue, name: z
+          Operation +
+            Reference: 
+              type: lvalue, name: z
+            constant integer: 5
+  Function call:
+    Function: foo
+    Function args: 
+      <empty>
+  Variable Declaration
+    Variable Name: i
+      constant integer: 0
+  WhileLoop:
+    Condition:
+      Operation <
+        Reference: 
+          type: lvalue, name: i
+        constant integer: 10
+    Body:
+        IfStatement:
+          Condition:
+            Operation <
+              Reference: 
+                type: lvalue, name: i
+              Reference: 
+                type: lvalue, name: z
+          Body:
+              Print
+                constant string: i =
+                Reference: 
+                  type: lvalue, name: i
+                constant string: is <= than z =
+                Reference: 
+                  type: lvalue, name: z
+          ElseBody:
+              Print
+                constant string: i =
+                Reference: 
+                  type: lvalue, name: i
+                constant string: is > than z =
+                Reference: 
+                  type: lvalue, name: z
+        Assignment
+          Reference: 
+            type: lvalue, name: i
+          Operation +
+            Reference: 
+              type: lvalue, name: i
+            constant integer: 1
+  Print
+    Reference: 
+      type: lvalue, name: z
+  Variable Declaration
+    Variable Name: arr
+      Array. Elements: 
+        constant integer: 2
+        constant integer: 3
+        constant integer: 4
+        constant integer: 5
+  Print
+    constant string: before:
+    Reference: 
+      type: lvalue, name: arr
+  Assignment
+    Reference: 
+      type: lvalue, name: arr
+      type: array, idx: 3
+    Tuple. Elements: 
+      idx: 1
+      member: <nil>
+      value: 
+        constant integer: 1
+      idx: 2
+      member: <nil>
+      value: 
+        constant integer: 2
+      idx: 3
+      member: b
+      value: 
+        Array. Elements: 
+          constant string: hello
+          Array. Elements: 
+            Tuple. Elements: 
+              idx: 1
+              member: <nil>
+              value: 
+                constant string: world
+              idx: 2
+              member: earth
+              value: 
+                constant string: earth
+      idx: 4
+      member: <nil>
+      value: 
+        constant integer: 4
+  Print
+    constant string: after:
+    Reference: 
+      type: lvalue, name: arr
+  Print
+    constant string: elem:
+    Reference: 
+      type: lvalue, name: arr
+      type: array, idx: 3
+      type: tuple, name: b
+      type: array, idx: 1
+      type: array, idx: 0
+      type: tuple, name: earth
+==================== Program Start ====================
+{5, a = 4, b = {g = 7, 8}, 5, 6}
+-2603
+55
+i = 0 is <= than z = 7
+i = 1 is <= than z = 7
+i = 2 is <= than z = 7
+i = 3 is <= than z = 7
+i = 4 is <= than z = 7
+i = 5 is <= than z = 7
+i = 6 is <= than z = 7
+i = 7 is > than z = 7
+i = 8 is > than z = 7
+i = 9 is > than z = 7
+7
+before: [2, 3, 4, 5]
+after: [2, 3, 4, {1, 2, b = [hello, [{world, earth = earth}]], 4}]
+elem: earth
+==================== Program Finish ====================
+Success :)

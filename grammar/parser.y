@@ -46,7 +46,7 @@
 %start Program
 
 
-%type<value> IDENT
+%type<value> IDENT INTEGER
 %type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array Tuple
 %type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList TupleElementList TupleElement
 %type<node> FunBody OptIdentifierList FunctionDeclaration FunctionCall
@@ -101,7 +101,7 @@ VariableDefinition
 
 Assignment
     : Reference ASSIGN Expression {
-        $$ = new AssignmentNode((LocationValue*)$1, (ExpressionNode*)$3);
+        $$ = new AssignmentNode((ReferenceNode*)$1, (ExpressionNode*)$3);
     }
     ;
 
@@ -222,9 +222,7 @@ TupleElement
         // std::cout<<"!!!!!!!!!"<<std::endl;
     }
     | Expression {
-        std::cout<<"no indent"<<std::endl;
         $$ = new TupleElement((ExpressionNode*) $1);
-        std::cout<<"!!!"<<std::endl;
     }
     ;
 
@@ -264,10 +262,27 @@ ExpressionList
     ;
 
 Reference
-    : IDENT { $$ = new LocationValue(std::string($1)); }
-    | Reference LBRACKET INTEGER RBRACKET { std::cout << "here" << std::endl; };
-    | Reference DOT IDENT
-    | Reference DOT INTEGER
+    : IDENT { 
+        auto ref = new ReferenceNode();
+        ref->elements.push_back(std::make_pair("lvalue", Identifier(std::string($1))));
+        $$ = ref;
+    }
+    | Reference LBRACKET INTEGER RBRACKET { 
+        std::cout << "Got here" << std::endl;
+        std::cout << ($1 == nullptr) << std::endl;
+        std::cout << yylval.iconst << std::endl;
+        std::cout << "Finish here" << std::endl;
+        ((ReferenceNode*)$1)->elements.push_back(std::make_pair("array", Identifier(yylval.iconst)));
+        $$ = $1;
+    };
+    | Reference DOT IDENT {
+        ((ReferenceNode*)$1)->elements.push_back(std::make_pair("tuple", Identifier(std::string($3))));
+        $$ = $1;
+    }
+    | Reference DOT INTEGER {
+        ((ReferenceNode*)$1)->elements.push_back(std::make_pair("tuple", Identifier(yylval.iconst)));
+        $$ = $1;
+    }
     ;
 
 TypeIndicator

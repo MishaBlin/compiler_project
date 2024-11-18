@@ -1,7 +1,6 @@
 #pragma once
 
 #include "function_node.hpp"
-#include "lvalue.hpp"
 
 struct Declaration : public Node {
   std::string var_name;

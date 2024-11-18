@@ -2,11 +2,16 @@
 
 #include <string>
 
+struct ArrayNode;
+struct TupleNode;
+
 struct Value {
   int *ivalue;
   double *dvalue;
   std::string *svalue;
   bool *bvalue;
+  ArrayNode *array;
+  TupleNode *tuple;
 
   Value();
 

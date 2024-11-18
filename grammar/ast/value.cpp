@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-Value::Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr) {}
+Value::Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr), array(nullptr), tuple(nullptr) {}
 
 Value Value::operator+(const Value &other) {
   Value res;

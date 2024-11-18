@@ -2,7 +2,9 @@
 
 #include <iostream>
 
+#include "array_node.hpp"
 #include "constants.hpp"
+#include "tuple_node.hpp"
 
 PrintNode::PrintNode(Elements* exp) : Node() {
   this->expressions = exp;
@@ -59,6 +61,22 @@ void PrintNode::Execute(Context* context) {
       } else {
         std::cout << "false";
       }
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
+    }
+
+    if (val.array) {
+      std::cout << val.array->ToString(context);
+      if (i != size) {
+        std::cout << constants::kSpace;
+      }
+      continue;
+    }
+
+    if (val.tuple) {
+      std::cout << val.tuple->ToString(context);
       if (i != size) {
         std::cout << constants::kSpace;
       }

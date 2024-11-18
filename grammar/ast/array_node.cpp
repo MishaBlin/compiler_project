@@ -3,12 +3,13 @@
 #include <iostream>
 
 #include "constants.hpp"
+#include "tuple_node.hpp"
 
 ArrayNode::ArrayNode(Elements *elements) : ExpressionNode() {
   this->elements = elements;
 }
 
-Value ArrayNode::GetValue(Context *context) {
+std::string ArrayNode::ToString(Context *context) {
   std::vector<Value> values;
 
   for (auto element : this->elements->elements) {
@@ -25,6 +26,10 @@ Value ArrayNode::GetValue(Context *context) {
       result += std::to_string(*(value.ivalue));
     } else if (value.bvalue) {
       result += std::to_string(*(value.dvalue));
+    } else if (value.array) {
+      result += value.array->ToString(context);
+    } else if (value.tuple) {
+      result += value.tuple->ToString(context);
     }
 
     if (i != values.size() - 1) {
@@ -34,10 +39,7 @@ Value ArrayNode::GetValue(Context *context) {
 
   result = "[" + result + "]";
 
-  auto val = new Value();
-  val->svalue = new std::string(result);
-
-  return *val;
+  return result;
 }
 
 void ArrayNode::Print(int indent) {
@@ -49,3 +51,9 @@ void ArrayNode::Print(int indent) {
     element->Print(indent + 1);
   };
 }
+
+Value ArrayNode::GetValue(Context *context) {
+  Value val;
+  val.array = this;
+  return val;
+};

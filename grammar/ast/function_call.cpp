@@ -47,8 +47,8 @@ void FunctionCall::Execute(Context* context) {
   auto it = context;
   FunctionNode* function = nullptr;
   while (it != nullptr) {
-    if (auto found = it->functions.find(this->function_name); found != it->functions.end() && found->second->parameters.size() == this->args->elements.size()) {
-      function = found->second;
+    if (auto found = it->locals.find(this->function_name); found != it->locals.end() && found->second.function->parameters.size() == this->args->elements.size()) {
+      function = found->second.function;
       break;
     }
     it = it->parent;
@@ -56,17 +56,19 @@ void FunctionCall::Execute(Context* context) {
   if (function == nullptr) {
     throw std::runtime_error("No such function with these arguments set found");
   }
-  auto func_context = new Context(context);
+  // auto func_context = new Context(context);
+  auto func_context = function->context;
   int cnt = 0;
   for (const auto& func_param : function->parameters) {
-    func_context->locals[func_param] = this->args->elements[cnt++]->GetValue(context);
+    func_context.locals[func_param] = this->args->elements[cnt++]->GetValue(context);
+
     // std::cout << "param: " << func_param << std::endl;
     // std::cout << "val: ";
     // func_context->locals[func_param].Print();
   }
   //   func_context->PrintVars();
   try {
-    function->Execute(func_context);
+    function->Execute(&func_context);
   } catch (const Value& value) {
     // std::cout << "got value from return ";
     // value.Print();

@@ -4,14 +4,14 @@
 
 #include "constants.hpp"
 
-AssignmentNode::AssignmentNode(LocationValue *lvalue, ExpressionNode *new_value) : Node() {
-  this->lvalue = lvalue;
+AssignmentNode::AssignmentNode(ReferenceNode *ref, ExpressionNode *new_value) : Node() {
+  this->ref = ref;
   this->new_value = new_value;
 }
 
 void AssignmentNode::Execute(Context *context) {
   // std::cout << "AssignmentNode::Execute" << std::endl;
-  this->lvalue->SetValue(context, this->new_value);
+  this->ref->SetValue(context, this->new_value);
 }
 
 void AssignmentNode::Print(int indent) {
@@ -19,9 +19,6 @@ void AssignmentNode::Print(int indent) {
     std::cout << constants::kIndent;
   }
   std::cout << "Assignment" << std::endl;
-  for (int i = 0; i < indent + 1; i++) {
-    std::cout << constants::kIndent;
-  }
-  std::cout << "Variable Name: " << this->lvalue->name << std::endl;
+  this->ref->Print(indent + 1);
   this->new_value->Print(indent + 1);
 }

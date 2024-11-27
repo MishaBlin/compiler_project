@@ -15,10 +15,13 @@ struct FunctionNode : public ExpressionNode {
   Value result;
   std::vector<std::string> parameters;
   BlocksNode* body;
-
+  Context context;
+  
   FunctionNode(BlocksNode* body, Parameters* parameters);
 
   void Execute(Context* context) override;
 
   void Print(int indent) override;
+
+  Value GetValue(Context* context) override;
 };

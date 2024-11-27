@@ -4,6 +4,7 @@
 
 struct ArrayNode;
 struct TupleNode;
+struct FunctionNode;
 
 struct Value {
   int *ivalue;
@@ -12,6 +13,7 @@ struct Value {
   bool *bvalue;
   ArrayNode *array;
   TupleNode *tuple;
+  FunctionNode *function;
 
   Value();
 

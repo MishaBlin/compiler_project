@@ -15,6 +15,10 @@ struct Context {
 
   Context(Context* parent = nullptr);
 
+  Context Clone() {
+    return *this;
+  }
+
   void PrintVars();
 
   int ScopeIdx();

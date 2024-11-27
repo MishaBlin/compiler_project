@@ -18,10 +18,11 @@ Declaration::Declaration(const std::string& name, FunctionNode* function) : Node
 void Declaration::Execute(Context* context) {
   // std::cout << "Declaration::Execute" << std::endl;
   if (this->func_def != nullptr) {
-    context->functions[this->var_name] = this->func_def;
+    this->func_def->context = context->Clone();
+    context->locals[this->var_name] = this->func_def -> GetValue(context);
     return;
   }
-  context->locals[this->var_name] = this->var_value->GetValue(context);
+  context->locals[this->var_name] = this->var_value ? this->var_value->GetValue(context) : Value();
 }
 
 void Declaration::Print(int indent) {

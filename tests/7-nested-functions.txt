@@ -1,5 +1,5 @@
 var outer := func(a) is
-    var inner := func(b) => a + b
+    var inner := func(b) => return a + b
     return inner
 end
 

@@ -103,6 +103,9 @@ Assignment
     : Reference ASSIGN Expression {
         $$ = new AssignmentNode((ReferenceNode*)$1, (ExpressionNode*)$3);
     }
+    | Reference ASSIGN FunctionDeclaration {
+        $$ = new AssignmentNode((ReferenceNode*)$1, (FunctionNode*)$3);
+    }
     ;
 
 If
@@ -369,7 +372,7 @@ int main(int argc, char *argv[])
       if (!root) {
         std::cout << "Root is null" << std::endl;
       } else {
-        
+
         std::cout << "Root is not null" << std::endl;
         PrintMessage("AST Tree");
         root->Print(0);
@@ -379,7 +382,7 @@ int main(int argc, char *argv[])
         PrintMessage("Program Finish");
       }
       if (flag == 0) {
-        std::cout << "Success :)" << std::endl;
+        // std::cout << "Success :)" << std::endl;
       } else {
         std::cout << "Failure :(" << std::endl;
       }

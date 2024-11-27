@@ -1,2 +1,2 @@
-var square := func(x) => x * x
+var square := func(x) => return x * x
 print square(4) 

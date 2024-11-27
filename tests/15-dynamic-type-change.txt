@@ -9,7 +9,7 @@ print x                  // Should output: hello
 x := true
 print x                  // Should output: true
 
-x := func(a) => a + 1
+x := func(a) => return a + 1
 print x(10)              // Should output: 11
 
 x := [1, 2, 3]

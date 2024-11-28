@@ -47,7 +47,7 @@ Value ReferenceNode::GetValue(Context* context) {
         value = value->tuple->elements->names[this->elements[i].second.name.value()]->GetValue(context);
         continue;
       }
-      value = value->tuple->elements->indexes[idx.value()]->GetValue(context);
+      value = value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
     }
   }
   return value.value();
@@ -89,7 +89,7 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
         value = value->tuple->elements->names[this->elements[i].second.name.value()]->GetValue(context);
         continue;
       }
-      value = value->tuple->elements->indexes[idx.value()]->GetValue(context);
+      value = value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
     }
   }
 
@@ -109,7 +109,7 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
       value->tuple->elements->names[this->elements.back().second.name.value()] = new_value;
       return;
     }
-    value->tuple->elements->indexes[idx.value()]->GetValue(context);
+    value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
   }
 }
 

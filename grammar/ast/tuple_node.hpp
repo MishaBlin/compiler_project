@@ -14,13 +14,15 @@ struct TupleElement : public Node {
 };
 
 struct TupleElements : public ExpressionNode {
-  std::unordered_map<int, ExpressionNode *> indexes;
   std::unordered_map<std::string, ExpressionNode *> names;
   std::unordered_map<int, std::string> idxToName;
 
   std::vector<ExpressionNode *> elements;
+  std::vector<TupleElement *> tuple_elems;
 
   TupleElements();
+  TupleElements(const TupleElements& other) = default;
+  TupleElements(TupleElements&& other) = default;
   void Add(TupleElement *element);
 };
 

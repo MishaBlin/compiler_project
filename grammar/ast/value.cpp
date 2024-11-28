@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "tuple_node.hpp"
+
 Value::Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr), array(nullptr), tuple(nullptr) {}
 
 Value Value::operator+(const Value &other) {
@@ -10,19 +12,40 @@ Value Value::operator+(const Value &other) {
   if (this->ivalue && other.ivalue) {
     res.ivalue = new int(*(this->ivalue) + *(other.ivalue));
     return res;
-  } else if (this->dvalue && other.dvalue) {
+  }
+
+  if (this->dvalue && other.dvalue) {
     res.dvalue = new double(*(this->dvalue) + *(other.dvalue));
     return res;
-  } else if (this->dvalue && other.ivalue) {
+  }
+  if (this->dvalue && other.ivalue) {
     res.dvalue = new double(*(this->dvalue) + (double)*(other.ivalue));
     return res;
-  } else if (this->ivalue && other.dvalue) {
+  }
+
+  if (this->ivalue && other.dvalue) {
     res.dvalue = new double((double)*(this->ivalue) + *(other.dvalue));
     return res;
-  } else if (this->svalue && other.svalue) {
+  }
+
+  if (this->svalue && other.svalue) {
     res.svalue = new std::string(*(this->svalue) + *(other.svalue));
     return res;
   }
+
+  if (this->tuple && other.tuple) {
+    TupleNode *right_tuple = other.tuple;
+
+    auto res_tuple_elems = *(this->tuple->elements);
+
+    for (auto other_elem : other.tuple->elements->tuple_elems) {
+      res_tuple_elems.Add(other_elem);
+    }
+
+    res.tuple = new TupleNode(new TupleElements(std::move(res_tuple_elems)));
+    return res;
+  }
+
   throw std::logic_error("not supported");
 }
 

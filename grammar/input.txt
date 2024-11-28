@@ -51,3 +51,6 @@ print "before:", arr
 arr[3] := {1, 2, b := ["hello", [{"world", earth := "earth"}]], 4}
 print "after:", arr
 print "elem:", arr[3].b[1][0].earth
+
+print arr is []
+print arr[3].b[1][0].earth is int

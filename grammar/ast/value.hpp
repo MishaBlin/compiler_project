@@ -24,4 +24,6 @@ struct Value {
   Value operator-(const Value &other);
   Value operator/(const Value &other);
   Value operator%(const Value &other);
+
+  bool IsEmpty() const;
 };

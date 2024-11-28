@@ -14,6 +14,7 @@
 #include "function_call.hpp"
 #include "function_node.hpp"
 #include "if_statement.hpp"
+#include "is_node.hpp"
 #include "node.hpp"
 #include "print_node.hpp"
 #include "program_node.hpp"

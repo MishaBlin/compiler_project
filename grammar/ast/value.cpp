@@ -113,3 +113,7 @@ void Value::Print() const {
   }
   std::cout << "<nil>" << std::endl;
 }
+
+bool Value::IsEmpty() const {
+  return !(this->array || this->bvalue || this->dvalue || this->function || this->ivalue || this->svalue || this->tuple);
+}

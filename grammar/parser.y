@@ -49,7 +49,7 @@
 %type<value> IDENT INTEGER
 %type<node> Program Declaration Statement VariableDefinition If Loop Return Print Assignment Array Tuple
 %type<node> Expression Relation Factor Term Unary Literal Primary Reference Body ExpressionList TupleElementList TupleElement
-%type<node> FunBody OptIdentifierList FunctionDeclaration FunctionCall
+%type<node> FunBody OptIdentifierList FunctionDeclaration FunctionCall TypeIndicator
 
 %%
 
@@ -183,7 +183,7 @@ Term
 
 Unary
     : Reference { $$ = $1; }
-    | Reference IS TypeIndicator
+    | Reference IS TypeIndicator { $$ = new IsNode((ReferenceNode*)$1, (TypeIndicatorNode*)$3); }
     | Primary { $$ = $1; }
     | PLUS Primary
     | MINUS Primary
@@ -289,14 +289,14 @@ Reference
     ;
 
 TypeIndicator
-    : INT_TYPE
-    | REAL_TYPE
-    | BOOL_TYPE
-    | STRING_TYPE
-    | EMPTY
-    | LBRACKET RBRACKET
-    | LBRACE RBRACE
-    | FUNC
+    : INT_TYPE { $$ = new TypeIndicatorNode(Types::INT); }
+    | REAL_TYPE { $$ = new TypeIndicatorNode(Types::REAL); }
+    | BOOL_TYPE { $$ = new TypeIndicatorNode(Types::BOOL); }
+    | STRING_TYPE { $$ = new TypeIndicatorNode(Types::STRING); }
+    | EMPTY { $$ = new TypeIndicatorNode(Types::EMPTY); }
+    | LBRACKET RBRACKET { $$ = new TypeIndicatorNode(Types::ARRAY); }
+    | LBRACE RBRACE { $$ = new TypeIndicatorNode(Types::TUPLE); }
+    | FUNC { $$ = new TypeIndicatorNode(Types::FUNCTION); }
     ;
 
 OptIdentifierList 

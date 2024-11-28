@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "array_node.hpp"
+
 Value::Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr), array(nullptr), tuple(nullptr) {}
 
 Value Value::operator+(const Value &other) {
@@ -23,6 +25,19 @@ Value Value::operator+(const Value &other) {
     res.svalue = new std::string(*(this->svalue) + *(other.svalue));
     return res;
   }
+
+  if (this->array && other.array) {
+    auto new_elements = new Elements();
+    for (const auto this_elem : this->array->elements->elements) {
+      new_elements->elements.push_back(this_elem);
+    }
+    for (const auto other_elem : other.array->elements->elements) {
+      new_elements->elements.push_back(other_elem);
+    }
+    res.array = new ArrayNode(new_elements);
+    return res;
+  }
+
   throw std::logic_error("not supported");
 }
 

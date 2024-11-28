@@ -9,6 +9,8 @@
 
 Identifier::Identifier(int index) : index(index) {}
 
+Identifier::Identifier(ExpressionNode* arr_idx) : arr_idx(arr_idx) {}
+
 Identifier::Identifier(const std::string& name) : name(name) {}
 
 ReferenceNode::ReferenceNode() : ExpressionNode() {
@@ -31,7 +33,11 @@ Value ReferenceNode::GetValue(Context* context) {
   for (int i = 1; i < this->elements.size(); i++) {
     if (this->elements[i].first == "array") {
       // add checking;
-      int idx = this->elements[i].second.index.value();
+      const auto arr_idx = this->elements[i].second.arr_idx.value()->GetValue(context);
+      if (arr_idx.ivalue == nullptr) {
+        throw std::runtime_error("No integer index");
+      }
+      const int idx = *arr_idx.ivalue;
       value = value->array->elements->elements[idx]->GetValue(context);
       continue;
     }
@@ -69,7 +75,11 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
   for (int i = 1; i < this->elements.size() - 1; i++) {
     if (this->elements[i].first == "array") {
       // add checking;
-      int idx = this->elements[i].second.index.value();
+      const auto arr_idx = this->elements[i].second.arr_idx.value()->GetValue(context);
+      if (arr_idx.ivalue == nullptr) {
+        throw std::runtime_error("No integer index");
+      }
+      const int idx = *arr_idx.ivalue;
       value = value->array->elements->elements[idx]->GetValue(context);
       continue;
     }
@@ -85,7 +95,11 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
 
   if (this->elements.back().first == "array") {
     // add checking;
-    int idx = this->elements.back().second.index.value();
+    const auto arr_idx = this->elements.back().second.arr_idx.value()->GetValue(context);
+    if (arr_idx.ivalue == nullptr) {
+      throw std::runtime_error("No integer index");
+    }
+    const int idx = *arr_idx.ivalue;
     value->array->elements->elements[idx] = new_value;
     return;
   }
@@ -113,7 +127,8 @@ void ReferenceNode::Print(int indent) {
       continue;
     }
     if (elements[i].first == "array") {
-      std::cout << "type: array, idx: " << elements[i].second.index.value() << std::endl;
+      std::cout << "type: array, idx: " << std::endl;
+      elements[i].second.arr_idx.value()->Print(indent + 1);
       continue;
     }
     if (elements[i].first == "tuple") {

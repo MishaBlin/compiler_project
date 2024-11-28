@@ -9,8 +9,10 @@
 struct Identifier {
   std::optional<int> index{};
   std::optional<std::string> name{};
+  std::optional<ExpressionNode*> arr_idx{};
 
   Identifier(int index);
+  Identifier(ExpressionNode* arr_idx);
   Identifier(const std::string& name);
 };
 

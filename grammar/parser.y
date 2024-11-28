@@ -270,12 +270,8 @@ Reference
         ref->elements.push_back(std::make_pair("lvalue", Identifier(std::string($1))));
         $$ = ref;
     }
-    | Reference LBRACKET INTEGER RBRACKET { 
-        std::cout << "Got here" << std::endl;
-        std::cout << ($1 == nullptr) << std::endl;
-        std::cout << yylval.iconst << std::endl;
-        std::cout << "Finish here" << std::endl;
-        ((ReferenceNode*)$1)->elements.push_back(std::make_pair("array", Identifier(yylval.iconst)));
+    | Reference LBRACKET Expression RBRACKET {
+        ((ReferenceNode*)$1)->elements.push_back(std::make_pair("array", Identifier((ExpressionNode*)$3)));
         $$ = $1;
     };
     | Reference DOT IDENT {

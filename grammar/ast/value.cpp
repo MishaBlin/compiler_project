@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "array_node.hpp"
 #include "tuple_node.hpp"
 
 Value::Value() : ivalue(nullptr), dvalue(nullptr), svalue(nullptr), bvalue(nullptr), array(nullptr), tuple(nullptr) {}
@@ -18,6 +19,7 @@ Value Value::operator+(const Value &other) {
     res.dvalue = new double(*(this->dvalue) + *(other.dvalue));
     return res;
   }
+
   if (this->dvalue && other.ivalue) {
     res.dvalue = new double(*(this->dvalue) + (double)*(other.ivalue));
     return res;
@@ -43,6 +45,18 @@ Value Value::operator+(const Value &other) {
     }
 
     res.tuple = new TupleNode(new TupleElements(std::move(res_tuple_elems)));
+    return res;
+  }
+
+  if (this->array && other.array) {
+    auto new_elements = new Elements();
+    for (const auto this_elem : this->array->elements->elements) {
+      new_elements->elements.push_back(this_elem);
+    }
+    for (const auto other_elem : other.array->elements->elements) {
+      new_elements->elements.push_back(other_elem);
+    }
+    res.array = new ArrayNode(new_elements);
     return res;
   }
 

@@ -8,21 +8,16 @@
 
     #include "ast/ast.hpp"
 
-    Node* root = nullptr;
-
-    #define YYDEBUG 1
-    extern FILE *yyin;
-    extern int yylineno;
     extern int yylex();
+    extern Node* root;
     void yyerror(const char *s);
-
 %}
 
 %union {
-    int iconst;       /* For integer constants */
-    double fconst;     /* For real constants */
-    std::string* sconst;     /* For string literals */
-    char* ident;      /* For identifiers */
+    int iconst;
+    double fconst;
+    std::string* sconst;
+    char* ident;
     Node* node;
     char* value;
 }
@@ -220,9 +215,7 @@ Tuple
 
 TupleElement
     : IDENT ASSIGN Expression {
-        // std::cout<<"ident assig exp"<<std::endl;
         $$ = new TupleElement((ExpressionNode*) $3, new std::string($1));
-        // std::cout<<"!!!!!!!!!"<<std::endl;
     }
     | Expression {
         $$ = new TupleElement((ExpressionNode*) $1);
@@ -327,63 +320,3 @@ FunBody
     ;
 
 %%
-
-void yyerror(const char *s)
-{
-  fprintf(stderr, "Syntax error at line %d: %s\n", yylineno, s);
-  exit(1);
-}
-
-void PrintMessage(const std::string& message) {
-    for (int i = 0; i < 10; i++) {
-        std::cout << "==";
-    }
-    std::cout << ' ' << message << ' ';
-    for (int i = 0; i < 10; i++) {
-        std::cout << "==";
-    }
-    std::cout << std::endl;
-}
-
-int main(int argc, char *argv[])
-{
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
-        return 1;
-    }
-
-    yyin = fopen(argv[1], "r");
-    if (!yyin) {
-        perror(argv[1]);
-        return 1;
-    }
-
-    if (strcmp(argv[2], "lexer") == 0) {
-      int token;
-      while ((token = yylex())) {
-          // printf("Token: %d\n", token);
-      }
-    } else {
-      int flag = yyparse();
-      if (!root) {
-        std::cout << "Root is null" << std::endl;
-      } else {
-
-        std::cout << "Root is not null" << std::endl;
-        PrintMessage("AST Tree");
-        root->Print(0);
-        
-        PrintMessage("Program Start");
-        root->Execute(nullptr);
-        PrintMessage("Program Finish");
-      }
-      if (flag == 0) {
-        // std::cout << "Success :)" << std::endl;
-      } else {
-        std::cout << "Failure :(" << std::endl;
-      }
-    }
-    fclose(yyin);
-
-    return 0;
-}

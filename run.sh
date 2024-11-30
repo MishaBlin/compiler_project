@@ -1,9 +1,5 @@
 #!/bin/bash
 
-flex -o ./grammar/lex.yy.c ./grammar/lexer.l
-
-gcc ./grammar/lex.yy.c -o lexer
-
-./lexer $1
-
-rm -f ./lexer ./grammar/lex.yy.c
+bison -d -v grammar/parser.y -o grammar/parser.tab.c
+flex -o grammar/lex.yy.c grammar/lexer.l 
+g++ -o main main.cpp grammar/lex.yy.c grammar/parser.tab.c grammar/ast/*.cpp -lfl

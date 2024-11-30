@@ -10,10 +10,10 @@ IfStatement::IfStatement(ExpressionNode *condition, BlocksNode *body, BlocksNode
   this->elsebody = elsebody;
 }
 
-void IfStatement::Execute(Context *context) {
+void IfStatement::Execute(Context *context, const bool dry_run) {
   if (*(condition->GetValue(context).bvalue)) {
     auto if_context = new Context(context);
-    body->Execute(if_context);
+    body->Execute(if_context, dry_run);
     // if_context->PrintVars();
     delete if_context;
   } else {
@@ -21,9 +21,17 @@ void IfStatement::Execute(Context *context) {
       return;
     }
     auto else_context = new Context(context);
-    elsebody->Execute(else_context);
-    // else_context->PrintVars();
+    elsebody->Execute(else_context, dry_run);
     delete else_context;
+  }
+}
+
+void IfStatement::Optimize() {
+  if (this->body) {
+    this->body->Optimize();
+  }
+  if (this->elsebody) {
+    this->elsebody->Optimize();
   }
 }
 

@@ -20,8 +20,7 @@ void PrintNode::Print(int indent) {
   }
 }
 
-void PrintNode::Execute(Context* context) {
-  // std::cout << "PrintNode::Execute" << std::endl;
+void PrintNode::Execute(Context* context, const bool dry_run) {
   if (expressions == nullptr) {
     throw std::runtime_error("Nothing to print");
   }
@@ -29,7 +28,6 @@ void PrintNode::Execute(Context* context) {
   int size = expressions->elements.size();
   for (auto expression : expressions->elements) {
     i++;
-    // std::cout << "i = " << i << std::endl;
     auto val = expression->GetValue(context);
     if (val.ivalue) {
       std::cout << *(val.ivalue);

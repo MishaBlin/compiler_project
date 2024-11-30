@@ -1,0 +1,15 @@
+var f := func (x) is 
+    if true then
+        return "something"
+        print "something"
+    else
+        print "nothing"
+        return 5
+        print "unreachable"
+    end
+    while x < 5 loop
+        return "less"
+        x := x + 1
+    end
+end
+

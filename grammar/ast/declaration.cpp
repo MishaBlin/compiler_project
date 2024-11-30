@@ -15,14 +15,24 @@ Declaration::Declaration(const std::string& name, FunctionNode* function) : Node
   this->func_def = function;
 }
 
-void Declaration::Execute(Context* context) {
-  // std::cout << "Declaration::Execute" << std::endl;
-  if (this->func_def != nullptr) {
-    this->func_def->context = context->Clone();
-    context->locals[this->var_name] = this->func_def -> GetValue(context);
+void Declaration::Execute(Context* context, const bool dry_run) {
+  if (dry_run) {
     return;
   }
+
+  if (this->func_def != nullptr) {
+    this->func_def->context = context->Clone();
+    context->locals[this->var_name] = this->func_def->GetValue(context);
+    return;
+  }
+
   context->locals[this->var_name] = this->var_value ? this->var_value->GetValue(context) : Value();
+}
+
+void Declaration::Optimize() {
+  if (this->func_def) {
+    this->func_def->Optimize();
+  }
 }
 
 void Declaration::Print(int indent) {

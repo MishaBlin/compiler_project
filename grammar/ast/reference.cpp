@@ -7,6 +7,17 @@
 #include "constants.hpp"
 #include "tuple_node.hpp"
 
+namespace {
+
+static constexpr const auto kArray = "array";
+static constexpr const auto kArrayOutOfRangeError = "Array Error: Out of range";
+static constexpr const auto kArrayNoIntIndexError = "Array Error: No integer index";
+static constexpr const auto kTuple = "tuple";
+static constexpr const auto kTupleNoElementError = "Tuple Error: No such element";
+static constexpr const auto kTupleOutOfRangeError = "Tuple Error: Out of range";
+
+}  // namespace
+
 Identifier::Identifier(int index) : index(index) {}
 
 Identifier::Identifier(ExpressionNode* arr_idx) : arr_idx(arr_idx) {}
@@ -31,21 +42,30 @@ Value ReferenceNode::GetValue(Context* context) {
     throw std::runtime_error("Variable " + variable + " not found");
   }
   for (int i = 1; i < this->elements.size(); i++) {
-    if (this->elements[i].first == "array") {
-      // add checking;
-      const auto arr_idx = this->elements[i].second.arr_idx.value()->GetValue(context);
+    if (this->elements[i].first == kArray) {
+      const auto idx_expr = this->elements[i].second.arr_idx.value();
+      const auto arr_idx = idx_expr->GetValue(context);
       if (arr_idx.ivalue == nullptr) {
-        throw std::runtime_error("No integer index");
+        throw std::runtime_error(kArrayNoIntIndexError);
       }
       const int idx = *arr_idx.ivalue;
+      if (idx >= value->array->elements->elements.size()) {
+        throw std::runtime_error(kArrayOutOfRangeError);
+      }
       value = value->array->elements->elements[idx]->GetValue(context);
       continue;
     }
-    if (this->elements[i].first == "tuple") {
+    if (this->elements[i].first == kTuple) {
       auto idx = this->elements[i].second.index;
       if (!idx.has_value()) {
+        if (value->tuple->elements->names.count(this->elements[i].second.name.value()) == 0) {
+          throw std::runtime_error(kTupleNoElementError);
+        }
         value = value->tuple->elements->names[this->elements[i].second.name.value()]->GetValue(context);
         continue;
+      }
+      if (idx.value() - 1 >= value->tuple->elements->elements.size()) {
+        throw std::runtime_error(kTupleOutOfRangeError);
       }
       value = value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
     }
@@ -53,14 +73,16 @@ Value ReferenceNode::GetValue(Context* context) {
   return value.value();
 }
 
-void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
-  // std::cout << "LocationValue::SetValue" << std::endl;
+void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value, const bool dry_run) {
   auto it = context;
   const auto variable = this->elements.front().second.name.value();
   std::optional<Value> value;
   while (it != nullptr) {
     if (it->locals.count(variable)) {
       if (this->elements.size() == 1) {
+        if (dry_run) {
+          return;
+        }
         it->locals[variable] = new_value->GetValue(context);
         return;
       }
@@ -73,41 +95,60 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value) {
   }
 
   for (int i = 1; i < this->elements.size() - 1; i++) {
-    if (this->elements[i].first == "array") {
-      // add checking;
-      const auto arr_idx = this->elements[i].second.arr_idx.value()->GetValue(context);
+    if (this->elements[i].first == kArray) {
+      const auto idx_expr = this->elements[i].second.arr_idx.value();
+      const auto arr_idx = idx_expr->GetValue(context);
       if (arr_idx.ivalue == nullptr) {
-        throw std::runtime_error("No integer index");
+        throw std::runtime_error(kArrayNoIntIndexError);
       }
       const int idx = *arr_idx.ivalue;
+      if (idx >= value->array->elements->elements.size()) {
+        throw std::runtime_error(kArrayOutOfRangeError);
+      }
       value = value->array->elements->elements[idx]->GetValue(context);
       continue;
     }
-    if (this->elements[i].first == "tuple") {
+    if (this->elements[i].first == kTuple) {
       auto idx = this->elements[i].second.index;
       if (!idx.has_value()) {
+        if (value->tuple->elements->names.count(this->elements[i].second.name.value()) == 0) {
+          throw std::runtime_error(kTupleNoElementError);
+        }
         value = value->tuple->elements->names[this->elements[i].second.name.value()]->GetValue(context);
         continue;
+      }
+      if (idx.value() - 1 >= value->tuple->elements->elements.size()) {
+        throw std::runtime_error(kTupleOutOfRangeError);
       }
       value = value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
     }
   }
 
-  if (this->elements.back().first == "array") {
-    // add checking;
-    const auto arr_idx = this->elements.back().second.arr_idx.value()->GetValue(context);
+  if (this->elements.back().first == kArray) {
+    const auto idx_expr = this->elements.back().second.arr_idx.value();
+    const auto arr_idx = idx_expr->GetValue(context);
     if (arr_idx.ivalue == nullptr) {
-      throw std::runtime_error("No integer index");
+      throw std::runtime_error(kArrayNoIntIndexError);
     }
     const int idx = *arr_idx.ivalue;
+    if (idx >= value->array->elements->elements.size()) {
+      throw std::runtime_error(kArrayOutOfRangeError);
+    }
     value->array->elements->elements[idx] = new_value;
     return;
   }
-  if (this->elements.back().first == "tuple") {
+
+  if (this->elements.back().first == kTuple) {
     auto idx = this->elements.back().second.index;
     if (!idx.has_value()) {
+      if (value->tuple->elements->names.count(this->elements.back().second.name.value()) == 0) {
+        throw std::runtime_error(kTupleNoElementError);
+      }
       value->tuple->elements->names[this->elements.back().second.name.value()] = new_value;
       return;
+    }
+    if (idx.value() - 1 >= value->tuple->elements->elements.size()) {
+      throw std::runtime_error(kTupleOutOfRangeError);
     }
     value->tuple->elements->elements[idx.value() - 1]->GetValue(context);
   }

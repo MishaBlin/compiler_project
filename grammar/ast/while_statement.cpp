@@ -9,12 +9,16 @@ WhileStatement::WhileStatement(ExpressionNode *condition, BlocksNode *body) : No
   this->body = body;
 }
 
-void WhileStatement::Execute(Context *context) {
+void WhileStatement::Execute(Context *context, const bool dry_run) {
   auto while_context = new Context(context);
   while (*(condition->GetValue(context).bvalue)) {
-    body->Execute(while_context);
+    body->Execute(while_context, dry_run);
   }
   delete while_context;
+}
+
+void WhileStatement::Optimize() {
+  this->body->Optimize();
 }
 
 void WhileStatement::Print(int indent) {

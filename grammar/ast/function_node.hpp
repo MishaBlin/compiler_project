@@ -19,7 +19,8 @@ struct FunctionNode : public ExpressionNode {
   
   FunctionNode(BlocksNode* body, Parameters* parameters);
 
-  void Execute(Context* context) override;
+  void Execute(Context* context, const bool dry_run) override;
+  void Optimize() override;
 
   void Print(int indent) override;
 

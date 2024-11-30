@@ -6,60 +6,52 @@
 
 Parameters::Parameters() : Node() {}
 
-void Parameters::Add(std::string &&parameter)
-{
+void Parameters::Add(std::string &&parameter) {
   parameters.emplace_back(std::move(parameter));
 }
 
-FunctionNode::FunctionNode(BlocksNode *body, Parameters *parameters) : ExpressionNode()
-{
+FunctionNode::FunctionNode(BlocksNode *body, Parameters *parameters) : ExpressionNode() {
   this->body = body;
   this->parameters = std::move(parameters->parameters);
 }
 
-void FunctionNode::Execute(Context *context)
-{
-  for (auto statement : this->body->children)
-  {
-    statement->Execute(context);
+void FunctionNode::Execute(Context *context, const bool dry_run) {
+  for (auto statement : this->body->children) {
+    statement->Execute(context, dry_run);
   }
 }
 
-Value FunctionNode::GetValue(Context *context)
-{
+void FunctionNode::Optimize() {
+  this->body->Optimize();
+}
+
+Value FunctionNode::GetValue(Context *context) {
   Value value = Value();
   value.function = this;
   return value;
 }
 
-void FunctionNode::Print(int indent)
-{
-  for (int i = 0; i < indent; i++)
-  {
+void FunctionNode::Print(int indent) {
+  for (int i = 0; i < indent; i++) {
     std::cout << constants::kIndent;
   }
   std::cout << "Parameters:" << std::endl;
-  for (int i = 0; i < indent + 1; i++)
-  {
+  for (int i = 0; i < indent + 1; i++) {
     std::cout << constants::kIndent;
   }
   std::cout << "[";
-  for (int i = 0; i < parameters.size(); i++)
-  {
+  for (int i = 0; i < parameters.size(); i++) {
     std::cout << parameters[i];
-    if (i != parameters.size() - 1)
-    {
+    if (i != parameters.size() - 1) {
       std::cout << ", ";
     }
   }
   std::cout << "]\n";
-  for (int i = 0; i < indent; i++)
-  {
+  for (int i = 0; i < indent; i++) {
     std::cout << constants::kIndent;
   }
   std::cout << "Body:" << std::endl;
-  for (auto block : this->body->children)
-  {
+  for (auto block : this->body->children) {
     block->Print(indent + 1);
   }
 }

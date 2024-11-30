@@ -9,7 +9,8 @@ struct BlocksNode : public Node {
   BlocksNode();
 
   void Add(Node *child) override;
-  void Execute(Context *context) override;
+  void Execute(Context *context, const bool dry_run) override;
   void Print(int indent) override;
+  void Optimize() override;
   ~BlocksNode();
 };

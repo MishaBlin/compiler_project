@@ -1,15 +1,57 @@
-var f := func (x) is 
-    if true then
-        return "something"
-        print "something"
-    else
-        print "nothing"
-        return 5
-        print "unreachable"
-    end
-    while x < 5 loop
-        return "less"
-        x := x + 1
-    end
+var t := {5, a:=4, b:={g:=7, 1 + 2 * 5 - 3}, 5,6}
+
+print t
+
+var print_res := func(x) => print x
+
+var square := func(x) is 
+    return x * x
+    print "result" // will not be in optimized
 end
 
+var neg_sum := func(x, y) is
+    var negate := func(x) is
+        return 0 - x
+    end
+    return negate(x + y)
+end
+
+var find_sum := func(left, right) is
+    var res := 0
+    for i in left .. right loop
+        res := res + i
+    end
+    return res
+end
+
+
+var z := 2
+var res := neg_sum(z, square(neg_sum(3, 4 * 12)))
+print res
+print_res(find_sum(1, 10))
+
+var foo := func() is
+    z := z + 5
+end
+
+foo()
+
+var i := 0
+while i < 10 loop
+    if i < z then
+        print "i =", i, "is <= than z =", z
+    else
+        print "i =", i, "is > than z =", z
+    end
+    i := i + 1
+end
+print z
+
+var arr := [2, 3, 4, 5]
+print "before:", arr
+arr[3] := {1, 2, b := ["hello", [{"world", earth := "earth"}]], 4}
+print "after:", arr
+print "elem:", arr[3].b[1][0].earth
+
+print arr is []
+print arr[3].b[1][0].earth is int

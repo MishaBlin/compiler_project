@@ -10,6 +10,6 @@ struct AssignmentNode : public Node {
   AssignmentNode(ReferenceNode *ref, ExpressionNode *new_value);
 
   void Execute(Context *context, const bool dry_run) override;
-
+    void Optimize() override;
   void Print(int indent) override;
 };

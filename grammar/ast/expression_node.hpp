@@ -4,9 +4,14 @@
 #include "value.hpp"
 
 struct ExpressionNode : public Node {
-  ExpressionNode();
+    ExpressionNode();
 
-  virtual Value GetValue(Context* context);
+    virtual Value GetValue(Context *context);
 
-  ~ExpressionNode();
+    void Optimize() override;
+
+
+    ~ExpressionNode();
 };
+
+ExpressionNode *OptimizeNode(ExpressionNode *node);

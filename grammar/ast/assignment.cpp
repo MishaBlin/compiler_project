@@ -21,3 +21,8 @@ void AssignmentNode::Print(int indent) {
   this->ref->Print(indent + 1);
   this->new_value->Print(indent + 1);
 }
+
+void AssignmentNode::Optimize() {
+    this->ref->Optimize();
+    this->new_value->Optimize();
+}

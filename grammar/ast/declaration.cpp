@@ -33,6 +33,9 @@ void Declaration::Optimize() {
   if (this->func_def) {
     this->func_def->Optimize();
   }
+    if (this->var_value) {
+        this->var_value->Optimize();
+    }
 }
 
 void Declaration::Print(int indent) {

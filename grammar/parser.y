@@ -178,11 +178,17 @@ Term
 
 Unary
     : Reference { $$ = $1; }
-    | Reference IS TypeIndicator { $$ = new IsNode((ReferenceNode*)$1, (TypeIndicatorNode*)$3); }
+    | Unary IS TypeIndicator { $$ = new IsNode((ReferenceNode*)$1, (TypeIndicatorNode*)$3); }
     | Primary { $$ = $1; }
-    | PLUS Primary
-    | MINUS Primary
-    | NOT Primary
+    | PLUS Unary {
+        $$ = new ArithmeticOperation(new ConstantNode(0), (ExpressionNode*)$2, '+');
+    }
+    | MINUS Unary {
+        $$ = new ArithmeticOperation(new ConstantNode(0), (ExpressionNode*)$2, '-');
+    }
+    | NOT Unary {
+        $$ = new NotOperation((ExpressionNode*)$2);
+    }
     ;
 
 FunctionCall

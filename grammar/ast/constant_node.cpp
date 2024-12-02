@@ -45,7 +45,7 @@ void ConstantNode::Print(int indent) {
   }
 
   if (this->value.bvalue) {
-    std::cout << "bool: " << *(this->value.bvalue) << std::endl;
+    std::cout << "bool: " << (*(this->value.bvalue) ? "true" : "false") << std::endl;
     return;
   }
 }

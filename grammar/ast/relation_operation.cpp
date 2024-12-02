@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "constant_node.hpp"
 #include "constants.hpp"
 
 RelationOperation::RelationOperation(ExpressionNode *l, ExpressionNode *r, const std::string &operation) : ExpressionNode() {
@@ -60,4 +61,51 @@ Value RelationOperation::GetValue(Context *context) {
   }
 
   return res;
+}
+
+ExpressionNode *RelationOperation::OptimizedNode() {
+  this->left = this->left->OptimizedNode();
+  this->right = this->right->OptimizedNode();
+
+  if (dynamic_cast<ConstantNode *>(this->left) && dynamic_cast<ConstantNode *>(this->right)) {
+    auto lval = this->left->GetValue(nullptr);
+    auto rval = this->right->GetValue(nullptr);
+
+    double left;
+    double right;
+
+    if (lval.ivalue) {
+      left = *(lval.ivalue);
+    } else if (lval.dvalue) {
+      left = *(lval.dvalue);
+    } else {
+      throw std::logic_error("not supported");
+    }
+
+    if (rval.ivalue) {
+      right = *(rval.ivalue);
+    } else if (lval.dvalue) {
+      right = *(rval.dvalue);
+    } else {
+      throw std::logic_error("not supported");
+    }
+
+    if (operation == "<") {
+      return new ConstantNode(left < right);
+    } else if (operation == "<=") {
+      return new ConstantNode(left <= right);
+    } else if (operation == ">") {
+      return new ConstantNode(left > right);
+    } else if (operation == ">=") {
+      return new ConstantNode(left >= right);
+    } else if (operation == "=") {
+      return new ConstantNode(left == right);
+    } else if (operation == "/=") {
+      return new ConstantNode(left != right);
+    } else {
+      throw std::logic_error("unknown operation");
+    }
+  }
+
+  return this;
 }

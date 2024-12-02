@@ -13,4 +13,5 @@ struct RelationOperation : public ExpressionNode {
   RelationOperation(ExpressionNode *l, ExpressionNode *r, const std::string &operation);
   void Print(int indent);
   Value GetValue(Context *context) override;
+  ExpressionNode* OptimizedNode() override;
 };

@@ -18,6 +18,7 @@ void WhileStatement::Execute(Context *context, const bool dry_run) {
 }
 
 void WhileStatement::Optimize() {
+  this->condition = this->condition->OptimizedNode();
   this->body->Optimize();
 }
 

@@ -27,6 +27,7 @@ void IfStatement::Execute(Context *context, const bool dry_run) {
 }
 
 void IfStatement::Optimize() {
+  this->condition = this->condition->OptimizedNode();
   if (this->body) {
     this->body->Optimize();
   }

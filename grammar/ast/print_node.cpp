@@ -88,3 +88,9 @@ void PrintNode::Execute(Context* context, const bool dry_run) {
 
 PrintNode::~PrintNode() {
 }
+
+void PrintNode::Optimize() {
+  for (auto& elem : this->expressions->elements) {
+    elem = elem->OptimizedNode();
+  }
+}

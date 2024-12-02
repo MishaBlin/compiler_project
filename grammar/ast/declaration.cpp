@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "arithmetic_operation.hpp"
+#include "boolean_operation.hpp"
 #include "constants.hpp"
 #include "function_node.hpp"
 
@@ -32,6 +34,13 @@ void Declaration::Execute(Context* context, const bool dry_run) {
 void Declaration::Optimize() {
   if (this->func_def) {
     this->func_def->Optimize();
+  }
+  if (this->var_value) {
+    if (dynamic_cast<ArithmeticOperation*>(this->var_value) || dynamic_cast<BooleanOperation*>(this->var_value)) {
+      this->var_value = this->var_value->OptimizedNode();
+      return;
+    }
+    this->var_value->Optimize();
   }
 }
 

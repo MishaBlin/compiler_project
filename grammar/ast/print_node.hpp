@@ -9,6 +9,7 @@ struct PrintNode : public Node {
 
   void Print(int indent) override;
   void Execute(Context *context, const bool dry_run) override;
+  void Optimize() override;
 
   ~PrintNode();
 };

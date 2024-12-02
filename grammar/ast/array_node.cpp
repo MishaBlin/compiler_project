@@ -57,3 +57,7 @@ Value ArrayNode::GetValue(Context *context) {
   val.array = this;
   return val;
 };
+
+void ArrayNode::Optimize() {
+  this->elements->Optimize();
+}

@@ -13,4 +13,5 @@ struct ArrayNode : public ExpressionNode {
 
   void Print(int indent) override;
   std::string ToString(Context* context);
+  void Optimize() override;
 };

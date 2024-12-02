@@ -11,6 +11,7 @@ struct Declaration : public Node {
 
   Declaration(const std::string& name, FunctionNode* function);
 
-  void Execute(Context* context) override;
+  void Execute(Context* context, const bool dry_run) override;
+  void Optimize() override;
   void Print(int indent) override;
 };

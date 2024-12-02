@@ -11,5 +11,5 @@ struct ReturnNode : public ExpressionNode {
 
   void Print(int indent) override;
 
-  void Execute(Context* context) override;
+  void Execute(Context* context, const bool dry_run) override;
 };

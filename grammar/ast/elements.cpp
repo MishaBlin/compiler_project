@@ -7,4 +7,4 @@ void Elements::Add(ExpressionNode *elem) {
   this->elements.push_back(elem);
 }
 
-void Elements::Execute(Context *context) {}
+void Elements::Execute(Context *context, const bool dry_run) {}

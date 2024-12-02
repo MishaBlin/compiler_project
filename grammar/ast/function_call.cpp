@@ -13,7 +13,7 @@ FunctionCall::FunctionCall(const std::string& func_name, Elements* arguments) : 
 }
 
 Value FunctionCall::GetValue(Context* context) {
-  this->Execute(context);
+  this->Execute(context, false);
   return (this->return_val != nullptr ? *(this->return_val) : Value());
 }
 
@@ -43,7 +43,7 @@ void FunctionCall::Print(int indent) {
   }
 }
 
-void FunctionCall::Execute(Context* context) {
+void FunctionCall::Execute(Context* context, const bool dry_run) {
   auto it = context;
   FunctionNode* function = nullptr;
   while (it != nullptr) {
@@ -56,23 +56,16 @@ void FunctionCall::Execute(Context* context) {
   if (function == nullptr) {
     throw std::runtime_error("No such function with these arguments set found");
   }
-  // auto func_context = new Context(context);
+
   auto func_context = function->context;
   int cnt = 0;
   for (const auto& func_param : function->parameters) {
     func_context.locals[func_param] = this->args->elements[cnt++]->GetValue(context);
-
-    // std::cout << "param: " << func_param << std::endl;
-    // std::cout << "val: ";
-    // func_context->locals[func_param].Print();
   }
-  //   func_context->PrintVars();
+
   try {
-    function->Execute(&func_context);
+    function->Execute(&func_context, dry_run);
   } catch (const Value& value) {
-    // std::cout << "got value from return ";
-    // value.Print();
     this->return_val = new Value(value);
-    // this->return_val->Print();
   }
 }

@@ -10,5 +10,5 @@ struct Elements : public ExpressionNode {
   Elements();
 
   void Add(ExpressionNode *elem);
-  void Execute(Context *context) override;
+  void Execute(Context *context, const bool dry_run) override;
 };

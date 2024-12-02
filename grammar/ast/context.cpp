@@ -26,8 +26,6 @@ void Context::PrintVars() {
     for (int i = 0; i < indent; i++) {
       std::cout << constants::kIndent;
     }
-    //   std::cout << "value: ";
-    //   value.Print();
   }
 
   auto it = this->parent;
@@ -45,16 +43,10 @@ void Context::PrintVars() {
       for (int i = 0; i < indent + step; i++) {
         std::cout << constants::kIndent;
       }
-      //   std::cout << "value: ";
-      //   value.Print();
     }
     it = it->parent;
     step++;
   }
-  //   if (this->parent != nullptr) {
-  //     std::cout << "Parent Context Vars:" << std::endl;
-  //     this->parent->PrintVars();
-  //   }
 }
 
 int Context::ScopeIdx() {

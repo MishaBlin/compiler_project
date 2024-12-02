@@ -8,7 +8,8 @@ struct WhileStatement : public Node {
   BlocksNode *body;
 
   WhileStatement(ExpressionNode *condition, BlocksNode *body);
-  void Execute(Context *context) override;
+  void Execute(Context *context, const bool dry_run) override;
+  void Optimize() override;
 
   void Print(int indent) override;
 };

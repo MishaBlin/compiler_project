@@ -30,6 +30,7 @@ struct TypeIndicatorNode : public Node {
   bool IsArray();
   bool IsTuple();
   bool IsFunction();
+  std::string ToString();
 };
 
 struct IsNode : public ExpressionNode {
@@ -39,4 +40,5 @@ struct IsNode : public ExpressionNode {
   IsNode(ReferenceNode* reference, TypeIndicatorNode* type);
 
   Value GetValue(Context* context) override;
+  void Print(const int indent) override;
 };

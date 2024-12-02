@@ -10,17 +10,17 @@ void ProgramNode::Add(Node* child) {
   children.push_back(child);
 }
 
-void ProgramNode::Execute(Context* context) {
+void ProgramNode::Execute(Context* context, const bool dry_run) {
   auto main_context = new Context();
-  // std::cout << "ProgramNode::Execute" << std::endl;
-  
-  
-  
   for (const auto child : children) {
-    child->Execute(main_context);
+    child->Execute(main_context, dry_run);
   }
-  // main_context->PrintVars();
-  // delete main_context;
+}
+
+void ProgramNode::Optimize() {
+  for (const auto child : children) {
+    child->Optimize();
+  }
 }
 
 void ProgramNode::Print(int indent) {

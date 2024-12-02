@@ -6,6 +6,7 @@ var print_res := func(x) => print x
 
 var square := func(x) is 
     return x * x
+    print "result" // will not be in optimized
 end
 
 var neg_sum := func(x, y) is
@@ -54,3 +55,5 @@ print "elem:", arr[3].b[1][0].earth
 
 print arr is []
 print arr[3].b[1][0].earth is int
+print (true and ((not false) xor (true or false)))
+print -arr[0] * (-6)

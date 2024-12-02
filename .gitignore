@@ -5,3 +5,4 @@ grammar/parser.output
 grammar/parser.tab.c
 grammar/parser.tab.h
 grammar/output.txt
+main

@@ -1,5 +1,8 @@
 #include "is_node.hpp"
 
+#include <iostream>
+
+#include "constants.hpp"
 #include "reference.hpp"
 
 TypeIndicatorNode::TypeIndicatorNode(Types type) : type(type) {
@@ -35,6 +38,28 @@ bool TypeIndicatorNode::IsTuple() {
 
 bool TypeIndicatorNode::IsFunction() {
   return type == Types::FUNCTION;
+}
+
+std::string TypeIndicatorNode::ToString() {
+  switch (type) {
+    case Types::INT:
+      return "int";
+    case Types::REAL:
+      return "real";
+    case Types::BOOL:
+      return "bool";
+    case Types::STRING:
+      return "string";
+    case Types::ARRAY:
+      return "array";
+    case Types::EMPTY:
+      return "empty";
+    case Types::TUPLE:
+      return "tuple";
+    case Types::FUNCTION:
+      return "function";
+  }
+  throw std::runtime_error("Unknown type");
 }
 
 IsNode::IsNode(ReferenceNode* reference, TypeIndicatorNode* type) : ExpressionNode() {
@@ -87,4 +112,17 @@ Value IsNode::GetValue(Context* context) {
 
   res.bvalue = new bool(false);
   return res;
+}
+
+void IsNode::Print(const int indent) {
+  for (int i = 0; i < indent; i++) {
+    std::cout << constants::kIndent;
+  }
+
+  std::cout << "TypeChecking:" << std::endl;
+  for (int i = 0; i < indent + 1; i++) {
+    std::cout << constants::kIndent;
+  }
+  std::cout << "Type: " << this->type->ToString() << std::endl;
+  this->reference->Print(indent + 1);
 }

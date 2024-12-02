@@ -16,6 +16,7 @@
 #include "if_statement.hpp"
 #include "is_node.hpp"
 #include "node.hpp"
+#include "not_operation.hpp"
 #include "print_node.hpp"
 #include "program_node.hpp"
 #include "reference.hpp"

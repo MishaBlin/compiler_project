@@ -22,5 +22,5 @@ struct ReferenceNode : public ExpressionNode {
 
   Value GetValue(Context* context) override;
   void Print(int indent) override;
-  void SetValue(Context* context, ExpressionNode* new_value);
+  void SetValue(Context* context, ExpressionNode* new_value, const bool dry_run);
 };

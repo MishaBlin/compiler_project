@@ -12,7 +12,7 @@ ForStatement::ForStatement(const std::string &it_name, ExpressionNode *begin, Ex
   this->body = body;
 }
 
-void ForStatement::Execute(Context *context) {
+void ForStatement::Execute(Context *context, const bool dry_run) {
   int start = *(this->begin->GetValue(context).ivalue);
   int end = *(this->end->GetValue(context).ivalue);
   auto for_context = new Context(context);
@@ -24,13 +24,17 @@ void ForStatement::Execute(Context *context) {
     if (curr > end) {
       break;
     }
-    this->body->Execute(for_context);
+    this->body->Execute(for_context, dry_run);
     int updated = *(for_context->locals[this->it_name].ivalue) + 1;
     auto up_val = Value();
     up_val.ivalue = new int(updated);
     for_context->locals[this->it_name] = up_val;
   }
   delete for_context;
+}
+
+void ForStatement::Optimize() {
+  this->body->Optimize();
 }
 
 void ForStatement::Print(int indent) {

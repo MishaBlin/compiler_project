@@ -9,6 +9,7 @@ struct IfStatement : public Node {
   BlocksNode *elsebody;
 
   IfStatement(ExpressionNode *condition, BlocksNode *body, BlocksNode *elsebody = nullptr);
-  void Execute(Context *context) override;
+  void Execute(Context *context, const bool dry_run) override;
+  void Optimize() override;
   void Print(int indent) override;
 };

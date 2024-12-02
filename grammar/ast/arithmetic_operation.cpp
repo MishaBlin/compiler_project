@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "constant_node.hpp"
 #include "constants.hpp"
 
 ArithmeticOperation::ArithmeticOperation(ExpressionNode *l, ExpressionNode *r, char op) : ExpressionNode() {
@@ -35,4 +36,41 @@ Value ArithmeticOperation::GetValue(Context *context) {
     default:
       throw std::logic_error("invalid arithmetic operator");
   }
+}
+
+ExpressionNode *ArithmeticOperation::OptimizedNode() {
+  this->left = this->left->OptimizedNode();
+  this->right = this->right->OptimizedNode();
+  if (dynamic_cast<ConstantNode *>(this->left) && dynamic_cast<ConstantNode *>(this->right)) {
+    auto left = this->left->GetValue(nullptr);
+    auto right = this->right->GetValue(nullptr);
+    Value res;
+    switch (this->operation) {
+      case '+':
+        res = left + right;
+        break;
+      case '-':
+        res = left - right;
+        break;
+      case '*':
+        res = left * right;
+        break;
+      case '/':
+        res = left / right;
+        break;
+      case '%':
+        res = left % right;
+        break;
+    }
+    if (res.ivalue) {
+      return new ConstantNode(*(res.ivalue));
+    }
+    if (res.dvalue) {
+      return new ConstantNode(*(res.dvalue));
+    }
+    if (res.svalue) {
+      return new ConstantNode(res.svalue);
+    }
+  }
+  return this;
 }

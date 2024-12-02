@@ -11,5 +11,7 @@ struct AssignmentNode : public Node {
 
   void Execute(Context *context, const bool dry_run) override;
 
+  void Optimize() override;
+
   void Print(int indent) override;
 };

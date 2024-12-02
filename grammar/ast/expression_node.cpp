@@ -8,3 +8,7 @@ Value ExpressionNode::GetValue(Context* context) {
 }
 
 ExpressionNode::~ExpressionNode() {}
+
+ExpressionNode* ExpressionNode::OptimizedNode() {
+  return this;
+}

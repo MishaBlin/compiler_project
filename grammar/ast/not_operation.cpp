@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "constant_node.hpp"
 #include "constants.hpp"
 
 NotOperation::NotOperation(ExpressionNode* node) : ExpressionNode(), value(node) {
@@ -25,4 +26,16 @@ void NotOperation::Print(const int indent) {
 
   std::cout << "Not operation:\n";
   this->value->Print(indent + 1);
+}
+
+ExpressionNode* NotOperation::OptimizedNode() {
+  this->value = this->value->OptimizedNode();
+  if (dynamic_cast<ConstantNode*>(this->value)) {
+    auto val = this->value->GetValue(nullptr);
+    if (!val.bvalue) {
+      throw std::runtime_error("No boolean operand to negate");
+    }
+    return new ConstantNode(!*(val.bvalue));
+  }
+  return this;
 }

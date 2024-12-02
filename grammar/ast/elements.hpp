@@ -11,4 +11,5 @@ struct Elements : public ExpressionNode {
 
   void Add(ExpressionNode *elem);
   void Execute(Context *context, const bool dry_run) override;
+  void Optimize() override;
 };

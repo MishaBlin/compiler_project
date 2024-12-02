@@ -13,6 +13,10 @@ void AssignmentNode::Execute(Context *context, const bool dry_run) {
   this->ref->SetValue(context, this->new_value, dry_run);
 }
 
+void AssignmentNode::Optimize() {
+  this->new_value = new_value->OptimizedNode();
+}
+
 void AssignmentNode::Print(int indent) {
   for (int i = 0; i < indent; i++) {
     std::cout << constants::kIndent;

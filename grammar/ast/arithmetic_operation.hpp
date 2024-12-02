@@ -10,5 +10,6 @@ struct ArithmeticOperation : public ExpressionNode {
 
   ArithmeticOperation(ExpressionNode *l, ExpressionNode *r, char op);
   void Print(int indent);
-  Value GetValue(Context* context) override;
+  Value GetValue(Context *context) override;
+  ExpressionNode *OptimizedNode() override;
 };

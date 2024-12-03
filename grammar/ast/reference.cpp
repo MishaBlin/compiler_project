@@ -80,9 +80,6 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value, const 
   while (it != nullptr) {
     if (it->locals.count(variable)) {
       if (this->elements.size() == 1) {
-        if (dry_run) {
-          return;
-        }
         it->locals[variable] = new_value->GetValue(context);
         return;
       }
@@ -93,7 +90,7 @@ void ReferenceNode::SetValue(Context* context, ExpressionNode* new_value, const 
   if (!value.has_value()) {
     throw std::runtime_error("Variable " + variable + " not found");
   }
-
+  
   for (int i = 1; i < this->elements.size() - 1; i++) {
     if (this->elements[i].first == kArray) {
       const auto idx_expr = this->elements[i].second.arr_idx.value();

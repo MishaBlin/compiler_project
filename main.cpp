@@ -53,7 +53,9 @@ int main(int argc, char *argv[]) {
       PrintMessage("Optimized AST Tree");
       root->Optimize();
       root->Print(0);
-
+      PrintMessage("Semantic Analyzer");
+      root->Execute(nullptr, true);
+      std::cout << "Everything is ok" << std::endl;
       PrintMessage("Program Start");
       root->Execute(nullptr, false);
       PrintMessage("Program Finish");

@@ -13,6 +13,9 @@ void WhileStatement::Execute(Context *context, const bool dry_run) {
   auto while_context = new Context(context);
   while (*(condition->GetValue(context).bvalue)) {
     body->Execute(while_context, dry_run);
+    if (dry_run) {
+      break;
+    }
   }
   delete while_context;
 }

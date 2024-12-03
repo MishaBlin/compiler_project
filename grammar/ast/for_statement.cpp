@@ -25,6 +25,9 @@ void ForStatement::Execute(Context *context, const bool dry_run) {
       break;
     }
     this->body->Execute(for_context, dry_run);
+    if (dry_run) {
+      break;
+    }
     int updated = *(for_context->locals[this->it_name].ivalue) + 1;
     auto up_val = Value();
     up_val.ivalue = new int(updated);

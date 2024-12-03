@@ -29,6 +29,9 @@ void PrintNode::Execute(Context* context, const bool dry_run) {
   for (auto expression : expressions->elements) {
     i++;
     auto val = expression->GetValue(context);
+    if (dry_run) {
+      continue;
+    }
     if (val.ivalue) {
       std::cout << *(val.ivalue);
       if (i != size) {
@@ -83,7 +86,8 @@ void PrintNode::Execute(Context* context, const bool dry_run) {
 
     throw std::runtime_error("Not supported type to print");
   }
-  std::cout << std::endl;
+  if (!dry_run)
+    std::cout << std::endl;
 }
 
 PrintNode::~PrintNode() {
